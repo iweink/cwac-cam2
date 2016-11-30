@@ -818,7 +818,7 @@ public class ExifInterface {
             throw new IllegalArgumentException(NULL_ARGUMENT_STRING);
         }
         OutputStream s = getExifWriterStream(exifOutStream);
-        bmap.compress(Bitmap.CompressFormat.JPEG, 90, s);
+        bmap.compress(Bitmap.CompressFormat.JPEG, 100, s);
         s.flush();
     }
 
@@ -894,7 +894,7 @@ public class ExifInterface {
         OutputStream s = null;
         try {
             s = getExifWriterStream(exifOutFileName);
-            bmap.compress(Bitmap.CompressFormat.JPEG, 90, s);
+            bmap.compress(Bitmap.CompressFormat.JPEG, 100, s);
             s.flush();
         } catch (IOException e) {
             closeSilently(s);
@@ -1838,7 +1838,7 @@ public class ExifInterface {
      */
     public boolean setCompressedThumbnail(Bitmap thumb) {
         ByteArrayOutputStream thumbnail = new ByteArrayOutputStream();
-        if (!thumb.compress(Bitmap.CompressFormat.JPEG, 90, thumbnail)) {
+        if (!thumb.compress(Bitmap.CompressFormat.JPEG, 100, thumbnail)) {
             return false;
         }
         return setCompressedThumbnail(thumbnail.toByteArray());

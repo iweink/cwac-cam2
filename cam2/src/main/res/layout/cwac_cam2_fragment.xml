@@ -26,7 +26,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:layout_alignParentRight="true"
+    android:layout_centerInParent="true"
     android:layout_marginBottom="16dp"
     android:layout_marginRight="16dp"
     android:src="@drawable/cwac_cam2_ic_action_camera"
@@ -41,6 +41,7 @@
     android:layout_alignParentRight="true"
     android:layout_marginBottom="4dp"
     android:layout_marginRight="16dp"
+    android:visibility="gone"
     fab:menu_colorNormal="@color/cwac_cam2_secondary_fab"
     fab:menu_colorPressed="@color/cwac_cam2_secondary_fab_pressed"
     fab:menu_icon="@drawable/cwac_cam2_ic_action_settings">
