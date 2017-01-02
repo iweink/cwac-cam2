@@ -29,7 +29,7 @@
     android:layout_centerInParent="true"
     android:layout_marginBottom="16dp"
     android:layout_marginRight="16dp"
-    android:visibility="visible"
+    android:visibility="gone"
     android:src="@drawable/cwac_cam2_ic_action_camera"
     fab:fab_colorNormal="@color/cwac_cam2_picture_fab"
     fab:fab_colorPressed="@color/cwac_cam2_picture_fab_pressed" />
