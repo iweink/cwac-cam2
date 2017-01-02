@@ -271,14 +271,14 @@ public class CameraFragment extends Fragment {
     v.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View view, MotionEvent motionEvent) {
-        System.out.println("Entered");
-        if (processingPreviousTouch) {
-          return true;
-        }
+
         if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+          if (processingPreviousTouch) {
+            return true;
+          }
           processingPreviousTouch = true;
           performCameraAction();
-
+          return true;
         }
         return false;
       }
