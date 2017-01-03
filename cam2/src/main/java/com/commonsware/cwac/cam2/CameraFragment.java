@@ -80,6 +80,8 @@ public class CameraFragment extends Fragment {
   private Chronometer chronometer;
   private ReverseChronometer reverseChronometer;
 
+  private boolean processingPreviousTouch = false;
+
   public static CameraFragment newPictureInstance(Uri output,
                                                   boolean updateMediaStore,
                                                   int quality,
@@ -187,6 +189,7 @@ public class CameraFragment extends Fragment {
         fabPicture.setEnabled(true);
         fabSwitch.setEnabled(canSwitchSources());
       }
+      processingPreviousTouch = false;
     }
   }
 
@@ -262,6 +265,22 @@ public class CameraFragment extends Fragment {
       @Override
       public void onClick(View view) {
         performCameraAction();
+      }
+    });
+
+    v.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+          if (processingPreviousTouch) {
+            return true;
+          }
+          processingPreviousTouch = true;
+          performCameraAction();
+          return true;
+        }
+        return false;
       }
     });
 
