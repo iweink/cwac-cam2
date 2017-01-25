@@ -95,13 +95,13 @@ public class ConfirmationFragment extends Fragment {
         ab.setTitle("");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          ab.setDisplayHomeAsUpEnabled(true);
+          ab.setDisplayHomeAsUpEnabled(false);
           ab.setHomeAsUpIndicator(R.drawable.cwac_cam2_ic_close_white);
         }
         else {
           ab.setIcon(R.drawable.cwac_cam2_ic_close_white);
-          ab.setDisplayShowHomeEnabled(true);
-          ab.setHomeButtonEnabled(true);
+          ab.setDisplayShowHomeEnabled(false);
+          ab.setHomeButtonEnabled(false);
         }
       }
     }
