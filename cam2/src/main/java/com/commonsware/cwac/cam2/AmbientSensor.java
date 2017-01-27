@@ -18,7 +18,7 @@ public class AmbientSensor implements SensorEventListener {
     private static boolean testMode = false;
     private SensorManager mSensorManager;
     private Sensor mLight;
-    private static int sensorValue = 0;
+    private int sensorValue = 0;
     private int accuracyLevel = 0;
 
     public AmbientSensor(Context context){
