@@ -25,11 +25,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ConfirmationFragment extends Fragment {
   private static final String ARG_NORMALIZE_ORIENTATION=
     "normalizeOrientation";
+  private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
 
   public interface Contract {
@@ -37,6 +40,9 @@ public class ConfirmationFragment extends Fragment {
     void retakePicture();
   }
 
+  private TextView imageText;
+  private TextView sensorText;
+  private Button retryBtn;
   private ImageView iv;
   private ImageContext imageContext;
 
@@ -69,13 +75,24 @@ public class ConfirmationFragment extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    iv=new ImageView(getActivity());
-
+    View view = inflater.inflate(R.layout.confirmation_fragment,container,false);
+    iv = (ImageView)view.findViewById(R.id.captured_image);
+    sensorText = (TextView) view.findViewById(R.id.sensor_text);
+    imageText = (TextView) view.findViewById(R.id.image_text);
+    retryBtn = (Button)view.findViewById(R.id.retry);
+    retryBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        getActivity().getActionBar().show();
+        retryBtn.setVisibility(View.GONE);
+        imageText.setVisibility(View.GONE);
+        getContract().retakePicture();
+      }
+    });
     if (imageContext!=null) {
       loadImage(quality);
     }
-
-    return(iv);
+    return view;
   }
 
   @Override
@@ -133,7 +150,14 @@ public class ConfirmationFragment extends Fragment {
   public void setImage(ImageContext imageContext, Float quality) {
     this.imageContext=imageContext;
     this.quality=quality;
-
+    System.out.println("SensorValue: "+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
+    sensorText.setText(""+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
+    if(getActivity().getIntent().getIntExtra(SENSOR_VALUE,1)<70) {
+        getActivity().getActionBar().hide();
+        retryBtn.setVisibility(View.VISIBLE);
+        imageText.setVisibility(View.VISIBLE);
+        imageText.setText("Dim light. Please take again in brighter light.");
+    }
     if (iv!=null) {
       loadImage(quality);
     }
