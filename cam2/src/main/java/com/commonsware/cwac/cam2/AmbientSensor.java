@@ -28,7 +28,6 @@ public class AmbientSensor implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if( sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT){
-            Log.i("Sensor Changed", "onSensor Change :" + sensorEvent.values[0]);
             sensorValue = (int)sensorEvent.values[0];
         }
     }
@@ -36,7 +35,6 @@ public class AmbientSensor implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
-            Log.i("Sensor Changed", "Accuracy :" + accuracy);
             accuracyLevel = accuracy;
         }
     }
