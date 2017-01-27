@@ -67,6 +67,7 @@ public class CameraFragment extends Fragment {
     "facingExactMatch";
   private static final String ARG_CHRONOTYPE="chronotype";
   private static final int PINCH_ZOOM_DELTA=20;
+  private static final String SENSOR_VALUE ="sensorValue";
   private CameraController ctlr;
   private ViewGroup previewStack;
   private FloatingActionButton fabPicture;
@@ -79,7 +80,7 @@ public class CameraFragment extends Fragment {
   private SeekBar zoomSlider;
   private Chronometer chronometer;
   private ReverseChronometer reverseChronometer;
-
+  private AmbientSensor ambientSensor;
   private boolean processingPreviousTouch = false;
 
   public static CameraFragment newPictureInstance(Uri output,
@@ -146,6 +147,7 @@ public class CameraFragment extends Fragment {
     scaleDetector=
       new ScaleGestureDetector(getActivity().getApplicationContext(),
         scaleListener);
+    ambientSensor = new AmbientSensor(getActivity().getApplicationContext());
   }
 
   /**
@@ -224,6 +226,9 @@ public class CameraFragment extends Fragment {
    */
   @Override
   public void onDestroy() {
+    if(ambientSensor!=null){
+      ambientSensor.unregisterSensorListener();
+    }
     if (ctlr!=null) {
       ctlr.destroy();
     }
@@ -479,7 +484,8 @@ public class CameraFragment extends Fragment {
     Uri output=getArguments().getParcelable(ARG_OUTPUT);
 
     PictureTransaction.Builder b=new PictureTransaction.Builder();
-
+    System.out.println("Sensor value: "+ambientSensor.getSensorValue());
+    getActivity().getIntent().putExtra(SENSOR_VALUE,ambientSensor.getSensorValue());
     if (output!=null) {
       b.toUri(getActivity(), output,
         getArguments().getBoolean(ARG_UPDATE_MEDIA_STORE, false),
