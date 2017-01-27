@@ -28,11 +28,8 @@ public class AmbientSensor implements SensorEventListener {
     }
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        // Do not change values in test mode.
-        if (testMode) {
-            return;
-        }
         if( sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT){
+            Log.i("Sensor Changed", "onSensor Change :" + sensorEvent.values[0]);
             sensorValue = (int)sensorEvent.values[0];
         }
     }
