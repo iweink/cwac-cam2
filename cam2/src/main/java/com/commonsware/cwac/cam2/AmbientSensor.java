@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -39,6 +40,7 @@ public class AmbientSensor implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
+            Log.i("Sensor Changed", "Accuracy :" + accuracy);
             accuracyLevel = accuracy;
         }
     }
