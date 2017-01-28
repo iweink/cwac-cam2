@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -15,9 +14,10 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class AmbientSensor implements SensorEventListener {
 
+    private static boolean testMode = false;
     private SensorManager mSensorManager;
     private Sensor mLight;
-    private int sensorValue = 0;
+    private static int sensorValue = 0;
     private int accuracyLevel = 0;
 
     public AmbientSensor(Context context){
@@ -27,6 +27,10 @@ public class AmbientSensor implements SensorEventListener {
     }
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        // Do not change values in test mode.
+        if (testMode) {
+            return;
+        }
         if( sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT){
             sensorValue = (int)sensorEvent.values[0];
         }
@@ -37,6 +41,12 @@ public class AmbientSensor implements SensorEventListener {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
             accuracyLevel = accuracy;
         }
+    }
+
+    // HACK to get tests working. Use dagger to mock this class in test setup.ß
+    public static void setTestSensorValue(int sensorValue) {
+        AmbientSensor.testMode = true;
+        AmbientSensor.sensorValue = sensorValue;
     }
 
     public int getSensorValue(){

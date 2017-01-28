@@ -157,6 +157,9 @@ public class ConfirmationFragment extends Fragment {
         retryBtn.setVisibility(View.VISIBLE);
         imageText.setVisibility(View.VISIBLE);
         imageText.setText("Dim light. Please take again in brighter light.");
+    } else {
+      imageText.setVisibility(View.GONE);
+      retryBtn.setVisibility(View.GONE);
     }
     if (iv!=null) {
       loadImage(quality);
