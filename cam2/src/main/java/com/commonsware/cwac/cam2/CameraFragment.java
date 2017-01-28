@@ -273,20 +273,22 @@ public class CameraFragment extends Fragment {
       }
     });
 
-    v.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View view, MotionEvent motionEvent) {
 
-        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+    v.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View view) {
+
+       // if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
           if (processingPreviousTouch) {
-            return true;
+            return;
           }
           processingPreviousTouch = true;
           performCameraAction();
-          return true;
+          return;
         }
-        return false;
-      }
+     //   return false;
+     // }
     });
 
     fabSwitch=(FloatingActionButton)v.findViewById(
