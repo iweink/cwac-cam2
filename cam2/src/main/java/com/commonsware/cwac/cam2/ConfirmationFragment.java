@@ -34,6 +34,7 @@ public class ConfirmationFragment extends Fragment {
     "normalizeOrientation";
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
+  private int retakeCount = 0;
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -153,13 +154,16 @@ public class ConfirmationFragment extends Fragment {
     System.out.println("SensorValue: "+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
     sensorText.setText(""+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
     if(getActivity().getIntent().getIntExtra(SENSOR_VALUE,1)<70) {
+      if (retakeCount <2) {
+        retakeCount++;
         getActivity().getActionBar().hide();
         retryBtn.setVisibility(View.VISIBLE);
         imageText.setVisibility(View.VISIBLE);
         imageText.setText("Dim light. Please take again in brighter light.");
-    } else {
-      imageText.setVisibility(View.GONE);
-      retryBtn.setVisibility(View.GONE);
+      } else {
+        imageText.setVisibility(View.GONE);
+        retryBtn.setVisibility(View.GONE);
+      }
     }
     if (iv!=null) {
       loadImage(quality);

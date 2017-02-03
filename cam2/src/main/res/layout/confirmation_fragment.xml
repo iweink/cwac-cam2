@@ -20,7 +20,7 @@
     android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
     android:drawableRight="@drawable/cwac_cam2_ic_refresh_white"
     android:text="Retake"
-    android:visibility="visible"
+    android:visibility="gone"
     android:background="@drawable/oval_border"
     android:textColor="@android:color/white"
     android:layout_gravity="center_horizontal"
