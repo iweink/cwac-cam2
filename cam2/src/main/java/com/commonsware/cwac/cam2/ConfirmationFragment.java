@@ -109,7 +109,7 @@ public class ConfirmationFragment extends Fragment {
       else {
         ab.setBackgroundDrawable(getActivity()
             .getResources()
-            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
+            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_transparent));
         ab.setTitle("");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -128,6 +128,20 @@ public class ConfirmationFragment extends Fragment {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.cwac_cam2_confirm, menu);
+    MenuItem ok = menu.findItem(R.id.cwac_cam2_ok);
+    ok.getActionView().setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        getContract().completeRequest(imageContext, true);
+      }
+    });
+    MenuItem retry = menu.findItem(R.id.cwac_cam2_retry);
+    retry.getActionView().setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        getContract().retakePicture();
+      }
+    });
   }
 
   @Override
