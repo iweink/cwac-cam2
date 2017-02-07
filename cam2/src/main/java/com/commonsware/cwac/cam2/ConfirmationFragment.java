@@ -34,6 +34,7 @@ public class ConfirmationFragment extends Fragment {
     "normalizeOrientation";
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
+  private int retakeCount = 0;
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -108,7 +109,7 @@ public class ConfirmationFragment extends Fragment {
       else {
         ab.setBackgroundDrawable(getActivity()
             .getResources()
-            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
+            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_transparent));
         ab.setTitle("");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -127,6 +128,20 @@ public class ConfirmationFragment extends Fragment {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.cwac_cam2_confirm, menu);
+    MenuItem ok = menu.findItem(R.id.cwac_cam2_ok);
+    ok.getActionView().setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        getContract().completeRequest(imageContext, true);
+      }
+    });
+    MenuItem retry = menu.findItem(R.id.cwac_cam2_retry);
+    retry.getActionView().setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        getContract().retakePicture();
+      }
+    });
   }
 
   @Override
@@ -150,16 +165,20 @@ public class ConfirmationFragment extends Fragment {
   public void setImage(ImageContext imageContext, Float quality) {
     this.imageContext=imageContext;
     this.quality=quality;
-    System.out.println("SensorValue: "+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
-    sensorText.setText(""+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
-    if(getActivity().getIntent().getIntExtra(SENSOR_VALUE,1)<70) {
+    int sensorValue = getActivity().getIntent().getIntExtra(SENSOR_VALUE,0);
+    System.out.println("SensorValue: "+sensorValue);
+    sensorText.setText(""+sensorValue);
+    if(sensorValue<70 && sensorValue>0) {
+      if (retakeCount <2) {
+        retakeCount++;
         getActivity().getActionBar().hide();
         retryBtn.setVisibility(View.VISIBLE);
         imageText.setVisibility(View.VISIBLE);
         imageText.setText("Dim light. Please take again in brighter light.");
-    } else {
-      imageText.setVisibility(View.GONE);
-      retryBtn.setVisibility(View.GONE);
+      } else {
+        imageText.setVisibility(View.GONE);
+        retryBtn.setVisibility(View.GONE);
+      }
     }
     if (iv!=null) {
       loadImage(quality);

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_marginTop="@dimen/cwac_cam2_fragment_chrono_margin"
               android:layout_marginBottom="@dimen/cwac_cam2_fragment_chrono_margin"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -8,8 +7,7 @@
     android:id="@+id/captured_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/cwac_cam2_fragment_chrono_margin"
-    android:layout_marginTop="@dimen/cwac_cam2_fragment_chrono_margin"/>
+    android:layout_marginBottom="@dimen/cwac_cam2_fragment_chrono_margin"/>
 
   <Button
     android:id="@+id/retry"
@@ -19,8 +17,8 @@
     android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
     android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
     android:drawableRight="@drawable/cwac_cam2_ic_refresh_white"
-    android:text="Retake"
-    android:visibility="visible"
+    android:text="@string/cwac_cam2_retry"
+    android:visibility="gone"
     android:background="@drawable/oval_border"
     android:textColor="@android:color/white"
     android:layout_gravity="center_horizontal"
