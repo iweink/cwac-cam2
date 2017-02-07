@@ -151,9 +151,10 @@ public class ConfirmationFragment extends Fragment {
   public void setImage(ImageContext imageContext, Float quality) {
     this.imageContext=imageContext;
     this.quality=quality;
-    System.out.println("SensorValue: "+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
-    sensorText.setText(""+getActivity().getIntent().getIntExtra(SENSOR_VALUE,1));
-    if(getActivity().getIntent().getIntExtra(SENSOR_VALUE,1)<70) {
+    int sensorValue = getActivity().getIntent().getIntExtra(SENSOR_VALUE,0);
+    System.out.println("SensorValue: "+sensorValue);
+    sensorText.setText(""+sensorValue);
+    if(sensorValue<70 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
         getActivity().getActionBar().hide();
