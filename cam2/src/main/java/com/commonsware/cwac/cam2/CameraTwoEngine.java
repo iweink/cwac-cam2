@@ -684,8 +684,6 @@ public class CameraTwoEngine extends CameraEngine {
                                  CaptureRequest request,
                                  long timestamp, long frameNumber) {
       super.onCaptureStarted(session, request, timestamp, frameNumber);
-
-      shutter.play(MediaActionSound.SHUTTER_CLICK);
     }
 
     @Override
@@ -694,6 +692,7 @@ public class CameraTwoEngine extends CameraEngine {
                                    TotalCaptureResult result) {
       // TODO: something useful with the picture
       unlockFocus();
+      shutter.play(MediaActionSound.SHUTTER_CLICK);
     }
 
     @Override
