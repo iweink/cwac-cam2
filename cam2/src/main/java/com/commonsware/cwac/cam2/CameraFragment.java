@@ -52,7 +52,8 @@ import java.util.LinkedList;
  * Fragment for displaying a camera preview, with hooks to allow
  * you (or the user) to take a picture.
  */
-public class CameraFragment extends Fragment {
+public class CameraFragment extends Fragment
+  implements ReverseChronometer.Listener {
   private static final String ARG_OUTPUT="output";
   private static final String ARG_UPDATE_MEDIA_STORE=
     "updateMediaStore";
@@ -66,6 +67,7 @@ public class CameraFragment extends Fragment {
   private static final String ARG_FACING_EXACT_MATCH=
     "facingExactMatch";
   private static final String ARG_CHRONOTYPE="chronotype";
+  private static final String ARG_TIMER_DURATION="timerDuration";
   private static final int PINCH_ZOOM_DELTA=20;
   private static final String SENSOR_VALUE ="sensorValue";
   private CameraController ctlr;
@@ -88,7 +90,8 @@ public class CameraFragment extends Fragment {
                                                   int quality,
                                                   ZoomStyle zoomStyle,
                                                   boolean facingExactMatch,
-                                                  boolean skipOrientationNormalization) {
+                                                  boolean skipOrientationNormalization,
+                                                  int timerDuration) {
     CameraFragment f=new CameraFragment();
     Bundle args=new Bundle();
 
@@ -100,6 +103,7 @@ public class CameraFragment extends Fragment {
     args.putBoolean(ARG_IS_VIDEO, false);
     args.putSerializable(ARG_ZOOM_STYLE, zoomStyle);
     args.putBoolean(ARG_FACING_EXACT_MATCH, facingExactMatch);
+    args.putInt(ARG_TIMER_DURATION, timerDuration);
     f.setArguments(args);
 
     return (f);
@@ -258,12 +262,12 @@ public class CameraFragment extends Fragment {
     progress=v.findViewById(R.id.cwac_cam2_progress);
     fabPicture=
       (FloatingActionButton)v.findViewById(R.id.cwac_cam2_picture);
+    reverseChronometer=
+      (ReverseChronometer)v.findViewById(R.id.rchrono);
 
     if (isVideo()) {
       fabPicture.setImageResource(R.drawable.cwac_cam2_ic_videocam);
       chronometer=(Chronometer)v.findViewById(R.id.chrono);
-      reverseChronometer=
-        (ReverseChronometer)v.findViewById(R.id.rchrono);
     }
 
     fabPicture.setOnClickListener(new View.OnClickListener() {
@@ -324,6 +328,11 @@ public class CameraFragment extends Fragment {
     }
 
     return (v);
+  }
+
+  @Override
+  public void onCountdownCompleted() {
+    takePicture();
   }
 
   public void shutdown() {
@@ -401,6 +410,16 @@ public class CameraFragment extends Fragment {
       fabSwitch.setEnabled(canSwitchSources());
       fabPicture.setEnabled(true);
       zoomSlider=(SeekBar)getView().findViewById(R.id.cwac_cam2_zoom);
+
+      int timerDuration=getArguments().getInt(ARG_TIMER_DURATION);
+
+      if (timerDuration>0) {
+        reverseChronometer.setVisibility(View.VISIBLE);
+        reverseChronometer.setOverallDuration(timerDuration);
+        reverseChronometer.setListener(this);
+        reverseChronometer.reset();
+        reverseChronometer.run();
+      }
 
       if (ctlr.supportsZoom()) {
         if (getZoomStyle()==ZoomStyle.PINCH) {
@@ -617,6 +636,7 @@ public class CameraFragment extends Fragment {
     }
 
     if (reverseChronometer!=null) {
+      reverseChronometer.setListener(null);
       reverseChronometer.stop();
     }
   }
