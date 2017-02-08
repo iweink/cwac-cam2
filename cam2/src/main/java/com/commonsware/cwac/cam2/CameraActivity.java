@@ -70,6 +70,14 @@ public class CameraActivity extends AbstractCameraActivity
   public static final String EXTRA_SKIP_ORIENTATION_NORMALIZATION=
     "cwac_cam2_skip_orientation_normalization";
 
+  /**
+   * Extra name for duration of countdown timer, in seconds. If negative, 0,
+   * or missing, no countdown timer will be used. If positive, a countdown
+   * will be displayed on-screen, and the picture will be taken automatically
+   * when the countdown completes, if the user has not already taken a picture.
+   */
+  public static final String EXTRA_TIMER="cwac_cam2_timer";
+
   private static final String TAG_CONFIRM=ConfirmationFragment.class.getCanonicalName();
   private static final String[] PERMS={Manifest.permission.CAMERA};
   private ConfirmationFragment confirmFrag;
@@ -225,7 +233,8 @@ public class CameraActivity extends AbstractCameraActivity
         getIntent().getIntExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1),
         (ZoomStyle)getIntent().getSerializableExtra(EXTRA_ZOOM_STYLE),
         getIntent().getBooleanExtra(EXTRA_FACING_EXACT_MATCH, false),
-        getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false)));
+        getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false),
+        getIntent().getIntExtra(EXTRA_TIMER, 0)));
   }
 
   private void removeFragments() {
@@ -314,6 +323,24 @@ public class CameraActivity extends AbstractCameraActivity
       }
 
       result.putExtra(EXTRA_CONFIRMATION_QUALITY, quality);
+
+      return(this);
+    }
+
+    /**
+     * Call to set a countdown timer for taking the picture. The picture will
+     * be taken after the specified number of seconds automatically, unless
+     * the activity is destroyed already (e.g., user already took a picture).
+     *
+     * @param duration time to wait before taking picture, in seconds
+     * @return the builder, for further configuration
+     */
+    public IntentBuilder timer(int duration) {
+      if (duration<=0) {
+        throw new IllegalArgumentException("Timer duration must be positive");
+      }
+
+      result.putExtra(EXTRA_TIMER, duration);
 
       return(this);
     }
