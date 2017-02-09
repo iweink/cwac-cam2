@@ -30,5 +30,7 @@
 	<string name="title_chrono_type">Chronometer type</string>
 	<string name="title_olock">Orientation lock mode</string>
 	<string name="title_request_permissions">Request permissions</string>
+	<string name="title_provider">Use FileProvider</string>
+	<string name="title_timer">Countdown timer</string>
 
 </resources>

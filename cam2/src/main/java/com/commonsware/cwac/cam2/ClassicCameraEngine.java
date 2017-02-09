@@ -110,6 +110,7 @@ public class ClassicCameraEngine extends CameraEngine
                   for (Camera.Size size : params.getSupportedPreviewSizes()) {
                     if (size.height<2160 && size.width<2160) {
                       sizes.add(new Size(size.width, size.height));
+//  Log.e("20161211", String.format("%d %d x %d", info.facing, size.width, size.height));
                     }
                   }
                 }
