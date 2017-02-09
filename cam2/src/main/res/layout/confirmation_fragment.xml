@@ -7,7 +7,6 @@
     android:id="@+id/captured_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/cwac_cam2_fragment_chrono_margin"
     android:layout_marginBottom="@dimen/cwac_cam2_fragment_chrono_margin"/>
 
   <Button

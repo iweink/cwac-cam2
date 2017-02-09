@@ -109,7 +109,7 @@ public class ConfirmationFragment extends Fragment {
       else {
         ab.setBackgroundDrawable(getActivity()
             .getResources()
-            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_transparent));
+            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
         ab.setTitle("");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
