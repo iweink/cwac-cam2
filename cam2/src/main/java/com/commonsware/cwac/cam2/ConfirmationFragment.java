@@ -43,6 +43,7 @@ public class ConfirmationFragment extends Fragment {
 
   private TextView imageText;
   private TextView sensorText;
+  private TextView sensorTextWhite;
   private Button retryBtn;
   private ImageView iv;
   private ImageContext imageContext;
@@ -79,6 +80,7 @@ public class ConfirmationFragment extends Fragment {
     View view = inflater.inflate(R.layout.confirmation_fragment,container,false);
     iv = (ImageView)view.findViewById(R.id.captured_image);
     sensorText = (TextView) view.findViewById(R.id.sensor_text);
+    sensorTextWhite = (TextView) view.findViewById(R.id.sensor_text_white);
     imageText = (TextView) view.findViewById(R.id.image_text);
     retryBtn = (Button)view.findViewById(R.id.retry);
     retryBtn.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +170,7 @@ public class ConfirmationFragment extends Fragment {
     int sensorValue = getActivity().getIntent().getIntExtra(SENSOR_VALUE,0);
     System.out.println("SensorValue: "+sensorValue);
     sensorText.setText(""+sensorValue);
+    sensorTextWhite.setText(""+sensorValue);
     if(sensorValue<70 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
