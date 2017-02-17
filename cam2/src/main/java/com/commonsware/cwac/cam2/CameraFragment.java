@@ -592,10 +592,6 @@ public class CameraFragment extends Fragment
   }
 
   private boolean canSwitchSources() {
-    if (isVideo() && !CameraConstraints.get().supportsFFCVideo()) {
-      return(false);
-    }
-
     return(!getArguments().getBoolean(ARG_FACING_EXACT_MATCH,
       false));
   }

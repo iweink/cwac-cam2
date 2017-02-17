@@ -34,8 +34,9 @@ public class RuleOfThirdsOverlay extends View {
   }
 
   private void init() {
-    thickness=
-      getContext().getResources().getDimension(R.dimen.cwac_cam2_gridline_width);
+    DisplayMetrics dm=getContext().getResources().getDisplayMetrics();
+
+    thickness=dm.densityDpi/160.0f; // 1dp
 
     paint=new Paint();
     paint.setColor(Color.WHITE);
