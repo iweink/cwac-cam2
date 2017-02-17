@@ -80,5 +80,7 @@
   <SwitchPreference
     android:key="useChooser"
     android:title="@string/title_use_chooser"/>
-
+  <SwitchPreference
+    android:key="showRuleOfThirds"
+    android:title="@string/title_rule_of_thirds"/>
 </PreferenceScreen>

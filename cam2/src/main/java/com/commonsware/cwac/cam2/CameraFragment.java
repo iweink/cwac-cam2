@@ -67,6 +67,7 @@ public class CameraFragment extends Fragment
   private static final String ARG_FACING_EXACT_MATCH=
     "facingExactMatch";
   private static final String ARG_CHRONOTYPE="chronotype";
+  private static final String ARG_RULE_OF_THIRDS="ruleOfThirds";
   private static final String ARG_TIMER_DURATION="timerDuration";
   private static final int PINCH_ZOOM_DELTA=20;
   private static final String SENSOR_VALUE ="sensorValue";
@@ -91,7 +92,8 @@ public class CameraFragment extends Fragment
                                                   ZoomStyle zoomStyle,
                                                   boolean facingExactMatch,
                                                   boolean skipOrientationNormalization,
-                                                  int timerDuration) {
+                                                  int timerDuration,
+                                                  boolean ruleOfThirds) {
     CameraFragment f=new CameraFragment();
     Bundle args=new Bundle();
 
@@ -104,6 +106,7 @@ public class CameraFragment extends Fragment
     args.putSerializable(ARG_ZOOM_STYLE, zoomStyle);
     args.putBoolean(ARG_FACING_EXACT_MATCH, facingExactMatch);
     args.putInt(ARG_TIMER_DURATION, timerDuration);
+    args.putBoolean(ARG_RULE_OF_THIRDS, ruleOfThirds);
     f.setArguments(args);
 
     return (f);
@@ -116,7 +119,8 @@ public class CameraFragment extends Fragment
                                                 int durationLimit,
                                                 ZoomStyle zoomStyle,
                                                 boolean facingExactMatch,
-                                                ChronoType chronoType) {
+                                                ChronoType chronoType,
+                                                boolean ruleOfThirds) {
     CameraFragment f=new CameraFragment();
     Bundle args=new Bundle();
 
@@ -128,6 +132,7 @@ public class CameraFragment extends Fragment
     args.putInt(ARG_DURATION_LIMIT, durationLimit);
     args.putSerializable(ARG_ZOOM_STYLE, zoomStyle);
     args.putBoolean(ARG_FACING_EXACT_MATCH, facingExactMatch);
+    args.putBoolean(ARG_RULE_OF_THIRDS, ruleOfThirds);
 
     if (durationLimit>0 || chronoType!=ChronoType.COUNT_DOWN) {
       args.putSerializable(ARG_CHRONOTYPE, chronoType);
@@ -327,7 +332,11 @@ public class CameraFragment extends Fragment
       prepController();
     }
 
-    return (v);
+    if (showRuleOfThirds()) {
+      v.findViewById(R.id.rule_of_thirds).setVisibility(View.VISIBLE);
+    }
+
+    return(v);
   }
 
   @Override
@@ -585,12 +594,16 @@ public class CameraFragment extends Fragment
   }
 
   private boolean canSwitchSources() {
-    return (!getArguments().getBoolean(ARG_FACING_EXACT_MATCH,
+    return(!getArguments().getBoolean(ARG_FACING_EXACT_MATCH,
       false));
   }
 
   private boolean isVideo() {
-    return (getArguments().getBoolean(ARG_IS_VIDEO, false));
+    return(getArguments().getBoolean(ARG_IS_VIDEO, false));
+  }
+
+  private boolean showRuleOfThirds() {
+    return(getArguments().getBoolean(ARG_RULE_OF_THIRDS, false));
   }
 
   private ChronoType getChronoType() {

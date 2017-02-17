@@ -34,6 +34,7 @@ and what their behavior is:
 | `orientationLockMode()`    | `EXTRA_ORIENTATION_LOCK_MODE`    | `OrientationLockMode`                     | Locks the device orientation (`PORTRAIT` or `LANDSCAPE`) or allows for config changes (`DEFAULT`) |
 | `quality()`                | `MediaStore.EXTRA_VIDEO_QUALITY` | `AbstractCameraActivity.Quality`          | Indicate the quality, either `Quality.LOW` or `Quality.HIGH` (default=high) |
 | `requestPermissions()`     | `EXTRA_FAIL_IF_NO_PERMISSION`    | none (extra takes a `boolean`)            | Indicates if the library should request runtime permissions if your app did not do so already |
+| `showRuleOfThirdsGrid()`   | `EXTRA_SHOW_RULE_OF_THIRDS_GRID` | `boolean`                                 | Whether a "rule of thirds" grid should overlay the preview (default: `false`) |
 | `skipConfirm()`            | `EXTRA_CONFIRM`                  | `boolean`                                 | Indicate if the user should be presented with a preview of the image and needs to accept it before proceeding (default is to show the confirmation screen) |
 | `skipOrientationNormalization()` | `EXTRA_SKIP_ORIENTATION_NORMALIZATION` | `boolean`                     | `true` if we should leave images alone, `false` if we should rotate them based on EXIF headers (default is `false`) |
 | `timer()`                  | `EXTRA_TIMER_DURATION`           | `int` (seconds)                           | Show a countdown timer, and automatically take the picture if not already taken/cancelled |

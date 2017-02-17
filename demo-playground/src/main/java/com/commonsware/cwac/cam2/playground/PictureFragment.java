@@ -247,6 +247,10 @@ public class PictureFragment extends PreferenceFragment {
       b.requestPermissions();
     }
 
+    if (prefs.getBoolean("showRuleOfThirds", false)) {
+      b.showRuleOfThirdsGrid();
+    }
+
     Intent result;
 
     if (prefs.getBoolean("useChooser", false)) {

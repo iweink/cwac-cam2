@@ -61,5 +61,8 @@
     android:key="requestPermissions"
     android:title="@string/title_request_permissions"
     android:defaultValue="true"/>
+  <SwitchPreference
+    android:key="showRuleOfThirds"
+    android:title="@string/title_rule_of_thirds"/>
 
 </PreferenceScreen>

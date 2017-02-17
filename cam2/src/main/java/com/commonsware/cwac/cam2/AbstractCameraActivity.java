@@ -163,6 +163,13 @@ abstract public class AbstractCameraActivity extends Activity {
     "cwac_cam2_fail_if_no_permission";
 
   /**
+   * Extra name for whether the camera should show a "rule of thirds"
+   * overlay above the camera preview. Defaults to false.
+   */
+  public static final String EXTRA_SHOW_RULE_OF_THIRDS_GRID=
+    "cwac_cam2_show_rule_of_thirds_grid";
+
+  /**
    * @return true if the activity wants FEATURE_ACTION_BAR_OVERLAY,
    * false otherwise
    */
@@ -788,6 +795,18 @@ abstract public class AbstractCameraActivity extends Activity {
      */
     public T requestPermissions() {
       result.putExtra(EXTRA_FAIL_IF_NO_PERMISSION, false);
+
+      return((T)this);
+    }
+
+    /**
+     * Call to request that we show a "rule of thirds" grid over the camera
+     * preview.
+     *
+     * @return the builder, for further configuration
+     */
+    public T showRuleOfThirdsGrid() {
+      result.putExtra(EXTRA_SHOW_RULE_OF_THIRDS_GRID, true);
 
       return((T)this);
     }

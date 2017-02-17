@@ -32,5 +32,6 @@
 	<string name="title_request_permissions">Request permissions</string>
 	<string name="title_provider">Use FileProvider</string>
 	<string name="title_timer">Countdown timer</string>
+	<string name="title_rule_of_thirds">Show "rule of thirds" grid</string>
 
 </resources>

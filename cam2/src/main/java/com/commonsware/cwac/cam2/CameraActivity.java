@@ -238,7 +238,8 @@ public class CameraActivity extends AbstractCameraActivity
         (ZoomStyle)getIntent().getSerializableExtra(EXTRA_ZOOM_STYLE),
         getIntent().getBooleanExtra(EXTRA_FACING_EXACT_MATCH, false),
         getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false),
-        getIntent().getIntExtra(EXTRA_TIMER, 0)));
+        getIntent().getIntExtra(EXTRA_TIMER, 0),
+        getIntent().getBooleanExtra(EXTRA_SHOW_RULE_OF_THIRDS_GRID, false)));
   }
 
   private void removeFragments() {
