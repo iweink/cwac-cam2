@@ -16,7 +16,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 public class RuleOfThirdsOverlay extends View {
@@ -34,9 +33,8 @@ public class RuleOfThirdsOverlay extends View {
   }
 
   private void init() {
-    DisplayMetrics dm=getContext().getResources().getDisplayMetrics();
-
-    thickness=dm.densityDpi/160.0f; // 1dp
+    thickness=
+      getContext().getResources().getDimension(R.dimen.cwac_cam2_gridline_width);
 
     paint=new Paint();
     paint.setColor(Color.WHITE);
