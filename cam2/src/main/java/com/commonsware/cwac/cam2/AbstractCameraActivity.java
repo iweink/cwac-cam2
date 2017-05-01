@@ -460,7 +460,7 @@ abstract public class AbstractCameraActivity extends Activity {
     }
   }
 
-  protected Intent buildNewIntent() {
+  protected Intent buildResultIntent() {
     return(new Intent());
   }
 

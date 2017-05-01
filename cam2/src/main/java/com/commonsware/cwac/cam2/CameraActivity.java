@@ -169,7 +169,7 @@ public class CameraActivity extends AbstractCameraActivity
     }
     else {
       if (needsThumbnail) {
-        final Intent result=buildNewIntent();
+        final Intent result=buildResultIntent();
 
         result.putExtra("data",
           imageContext.buildResultThumbnail(normalizeOrientation()));
@@ -186,7 +186,7 @@ public class CameraActivity extends AbstractCameraActivity
         findViewById(android.R.id.content).post(new Runnable() {
           @Override
           public void run() {
-            setResult(RESULT_OK, buildNewIntent().setData(getOutputUri()));
+            setResult(RESULT_OK, buildResultIntent().setData(getOutputUri()));
             removeFragments();
           }
         });
