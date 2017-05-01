@@ -460,6 +460,10 @@ abstract public class AbstractCameraActivity extends Activity {
     }
   }
 
+  protected Intent buildNewIntent() {
+    return(new Intent());
+  }
+
   @TargetApi(23)
   private boolean hasPermission(String perm) {
     if (useRuntimePermissions()) {
