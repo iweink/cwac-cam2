@@ -30,27 +30,34 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import com.commonsware.cwac.cam2.AbstractCameraActivity;
 import com.commonsware.cwac.cam2.CameraActivity;
 import com.commonsware.cwac.cam2.Facing;
 import com.commonsware.cwac.cam2.FlashMode;
+import com.commonsware.cwac.cam2.FocusMode;
+import com.commonsware.cwac.cam2.OrientationLockMode;
 import com.commonsware.cwac.cam2.VideoRecorderActivity;
 import com.commonsware.cwac.cam2.ZoomStyle;
+import com.commonsware.cwac.cam2.helper.FileHelper;
 import com.commonsware.cwac.security.RuntimePermissionUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -73,6 +80,7 @@ public class MainActivity extends Activity {
   private static final String STATE_PAGE="cwac_cam2_demo_page";
   private static final String STATE_TEST_ROOT="cwac_cam2_demo_test_root";
   private static final String STATE_IS_VIDEO="cwac_cam2_demo_is_video";
+  private static final int CAMERA_ACTIVITY_IDENTIFIER = 1234;
   private ViewFlipper wizardBody;
   private Button previous;
   private Button next;
@@ -86,49 +94,71 @@ public class MainActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    if (!Environment.MEDIA_MOUNTED
-      .equals(Environment.getExternalStorageState())) {
-      Toast
-        .makeText(this, "Cannot access external storage!",
-          Toast.LENGTH_LONG)
-        .show();
-      finish();
+    FileHelper fileHelper = new FileHelper();
+    String imageFileName = UUID.randomUUID().toString();
+    File albumF = fileHelper.getFile("/storage/emulated/0/Pictures/Cure Skin");
+    File imageF = null;
+    try {
+      imageF = File.createTempFile(imageFileName, ".JPG", albumF);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    Intent i = new CameraActivity.IntentBuilder(this)
+        .facing(Facing.BACK)
+        .to(imageF)
+        .orientationLockMode(OrientationLockMode.PORTRAIT)
+        .debug()
+        .quality(AbstractCameraActivity.Quality.HIGH)
+        .focusMode(FocusMode.CONTINUOUS)
+        .zoomStyle(ZoomStyle.NONE)
+        .updateMediaStore()
+        .setFaceOccupancy(70)
+        .requestPermissions()
+        .build();
+    startActivityForResult(i, CAMERA_ACTIVITY_IDENTIFIER);
+//
+//    if (!Environment.MEDIA_MOUNTED
+//      .equals(Environment.getExternalStorageState())) {
+//      Toast
+//        .makeText(this, "Cannot access external storage!",
+//          Toast.LENGTH_LONG)
+//        .show();
+//      finish();
+//    }
 
-    previewFrame=
-      new File(getExternalCacheDir(), "cam2-preview.jpg");
-
-    setContentView(R.layout.main);
-
-    utils=new RuntimePermissionUtils(this);
-
-    wizardBody=(ViewFlipper)findViewById(R.id.wizard_body);
-    previous=(Button)findViewById(R.id.previous);
-    next=(Button)findViewById(R.id.next);
-
-    if (savedInstanceState==null) {
-      String filename="cam2_"+Build.MANUFACTURER+"_"+Build.PRODUCT
-          +"_"+new SimpleDateFormat("yyyyMMdd'-'HHmmss").format(new Date());
-
-      filename=filename.replaceAll(" ", "_");
-
-      testRoot=new File(getExternalFilesDir(null), filename);
-    }
-    else {
-      wizardBody.setDisplayedChild(savedInstanceState.getInt(STATE_PAGE, 0));
-      testRoot=new File(savedInstanceState.getString(STATE_TEST_ROOT));
-      isVideo=savedInstanceState.getBoolean(STATE_IS_VIDEO, false);
-    }
-
-    testZip=new File(testRoot.getAbsolutePath()+".zip");
-
-    if (!haveNecessaryPermissions() && utils.useRuntimePermissions()) {
-      requestPermissions(PERMS_ALL, RESULT_PERMS_ALL);
-    }
-    else {
-      handlePage();
-    }
+//    previewFrame=
+//      new File(getExternalCacheDir(), "cam2-preview.jpg");
+//
+//    setContentView(R.layout.main);
+//
+//    utils=new RuntimePermissionUtils(this);
+//
+//    wizardBody=(ViewFlipper)findViewById(R.id.wizard_body);
+//    previous=(Button)findViewById(R.id.previous);
+//    next=(Button)findViewById(R.id.next);
+//
+//    if (savedInstanceState==null) {
+//      String filename="cam2_"+Build.MANUFACTURER+"_"+Build.PRODUCT
+//          +"_"+new SimpleDateFormat("yyyyMMdd'-'HHmmss").format(new Date());
+//
+//      filename=filename.replaceAll(" ", "_");
+//
+//      testRoot=new File(getExternalFilesDir(null), filename);
+//    }
+//    else {
+//      wizardBody.setDisplayedChild(savedInstanceState.getInt(STATE_PAGE, 0));
+//      testRoot=new File(savedInstanceState.getString(STATE_TEST_ROOT));
+//      isVideo=savedInstanceState.getBoolean(STATE_IS_VIDEO, false);
+//    }
+//
+//    testZip=new File(testRoot.getAbsolutePath()+".zip");
+//
+//    if (!haveNecessaryPermissions() && utils.useRuntimePermissions()) {
+//      requestPermissions(PERMS_ALL, RESULT_PERMS_ALL);
+//    }
+//    else {
+//      handlePage();
+//    }
   }
 
   @Override

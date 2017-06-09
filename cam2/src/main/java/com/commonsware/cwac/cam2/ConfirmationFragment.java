@@ -17,6 +17,7 @@ package com.commonsware.cwac.cam2;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,12 +30,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.commonsware.cwac.cam2.helper.ImageHelper;
+
 public class ConfirmationFragment extends Fragment {
   private static final String ARG_NORMALIZE_ORIENTATION=
     "normalizeOrientation";
+  private static final String ARG_FACE_OCCUPANCY=
+    "face_occupancy";
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
   private int retakeCount = 0;
+  private ImageHelper imageHelper = new ImageHelper();
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -47,11 +53,12 @@ public class ConfirmationFragment extends Fragment {
   private ImageView iv;
   private ImageContext imageContext;
 
-  public static ConfirmationFragment newInstance(boolean normalizeOrientation) {
+  public static ConfirmationFragment newInstance(boolean normalizeOrientation, float faceOccupancy) {
     ConfirmationFragment result=new ConfirmationFragment();
     Bundle args=new Bundle();
 
     args.putBoolean(ARG_NORMALIZE_ORIENTATION, normalizeOrientation);
+    args.putFloat(ARG_FACE_OCCUPANCY, faceOccupancy);
     result.setArguments(args);
 
     return(result);
@@ -171,10 +178,7 @@ public class ConfirmationFragment extends Fragment {
     if(sensorValue<70 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
-        getActivity().getActionBar().hide();
-        retryBtn.setVisibility(View.VISIBLE);
-        imageText.setVisibility(View.VISIBLE);
-        imageText.setText("Dim light. Please take again in brighter light.");
+        showRetryOption("Dim light. Please take again in brighter light.");
       } else {
         imageText.setVisibility(View.GONE);
         retryBtn.setVisibility(View.GONE);
@@ -185,12 +189,25 @@ public class ConfirmationFragment extends Fragment {
     }
   }
 
+  private void showRetryOption(String message) {
+    getActivity().getActionBar().hide();
+    retryBtn.setVisibility(View.VISIBLE);
+    imageText.setVisibility(View.VISIBLE);
+    imageText.setText(message);
+  }
+
   private Contract getContract() {
     return((Contract)getActivity());
   }
 
   private void loadImage(Float quality) {
     iv.setImageBitmap(imageContext.buildPreviewThumbnail(getActivity(),
-      quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
+        quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
+    if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0 && !imageHelper.isFaceOccupancy(
+        imageContext.getContext(),
+        ((BitmapDrawable) iv.getDrawable()).getBitmap(),
+        getArguments().getFloat(ARG_FACE_OCCUPANCY))) {
+      showRetryOption("Please take a closer picture.");
+    }
   }
 }
