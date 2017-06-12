@@ -30,7 +30,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.commonsware.cwac.cam2.helper.ImageHelper;
+import com.commonsware.cwac.cam2.helper.FaceOccupancyDetector;
+import com.commonsware.cwac.cam2.helper.OccupancyResult;
 
 public class ConfirmationFragment extends Fragment {
   private static final String ARG_NORMALIZE_ORIENTATION=
@@ -40,7 +41,7 @@ public class ConfirmationFragment extends Fragment {
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
   private int retakeCount = 0;
-  private ImageHelper imageHelper = new ImageHelper();
+  private FaceOccupancyDetector faceOccupancyDetector = new FaceOccupancyDetector();
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -203,11 +204,14 @@ public class ConfirmationFragment extends Fragment {
   private void loadImage(Float quality) {
     iv.setImageBitmap(imageContext.buildPreviewThumbnail(getActivity(),
         quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
-    if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0 && !imageHelper.isFaceOccupancy(
-        imageContext.getContext(),
-        ((BitmapDrawable) iv.getDrawable()).getBitmap(),
-        getArguments().getFloat(ARG_FACE_OCCUPANCY))) {
-      showRetryOption("Please take a closer picture.");
+    if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
+      OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
+          imageContext.getContext(),
+          ((BitmapDrawable) iv.getDrawable()).getBitmap(),
+          getArguments().getFloat(ARG_FACE_OCCUPANCY));
+      if (occupancyResult != OccupancyResult.FACE_WITH_CONDITION) {
+        showRetryOption("Please take a closer picture.");
+      }
     }
   }
 }

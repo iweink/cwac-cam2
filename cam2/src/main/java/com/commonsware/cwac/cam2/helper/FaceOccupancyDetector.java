@@ -11,18 +11,20 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class ImageHelper {
-  public boolean isFaceOccupancy(Context context, Bitmap bitmap, float percent) {
-    if (bitmap == null) return false;
+public class FaceOccupancyDetector {
+  public OccupancyResult isFacePresentWithMinimumOccupancy(Context context, Bitmap bitmap,
+                                                           float minimumOccupancyPercentage) {
+    if (bitmap == null) return OccupancyResult.NO_FACE;
     List<Face> faces = getFaces(context, bitmap);
-    if (faces.size() != 1) return false;
+    if (faces.size() != 1) return OccupancyResult.MANY_FACES;
     double areaOfImage = bitmap.getWidth()*bitmap.getHeight();
     double areaOfFace = faces.get(0).getHeight() * faces.get(0).getWidth();
 //    Log.e("Percentage Occupied", ""+(areaOfFace/areaOfImage));
 //    Log.e("Percentage Required", ""+(percent/100));
 //    Log.e("Response", "" + ((areaOfFace/areaOfImage) > (percent/100)));
-    return (areaOfFace/areaOfImage) > (percent/100);
+    return (areaOfFace/areaOfImage) > (minimumOccupancyPercentage/100)
+        ? OccupancyResult.FACE_WITH_CONDITION
+        : OccupancyResult.FACE_WITHOUT_CONDITION;
   }
 
   public List<Face> getFaces(Context context, Bitmap bitmap) {
