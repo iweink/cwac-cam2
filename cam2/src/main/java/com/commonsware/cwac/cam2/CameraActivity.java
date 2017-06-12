@@ -19,8 +19,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +72,8 @@ public class CameraActivity extends AbstractCameraActivity
   public static final String EXTRA_SKIP_ORIENTATION_NORMALIZATION=
     "cwac_cam2_skip_orientation_normalization";
 
+  public static final String FACE_OCCUPANCY=
+      "face_occupancy";
   /**
    * Extra name for duration of countdown timer, in seconds. If negative, 0,
    * or missing, no countdown timer will be used. If positive, a countdown
@@ -109,7 +113,7 @@ public class CameraActivity extends AbstractCameraActivity
     if (confirmFrag==null) {
       confirmFrag=
         ConfirmationFragment
-          .newInstance(normalizeOrientation());
+          .newInstance(normalizeOrientation(), getIntent().getFloatExtra(FACE_OCCUPANCY, 0));
       getFragmentManager()
           .beginTransaction()
           .add(android.R.id.content, confirmFrag, TAG_CONFIRM)
@@ -343,6 +347,12 @@ public class CameraActivity extends AbstractCameraActivity
       result.putExtra(EXTRA_TIMER, duration);
 
       return(this);
+    }
+
+    public IntentBuilder setFaceOccupancy(float faceOccupancy) {
+      result.putExtra(FACE_OCCUPANCY, faceOccupancy);
+
+      return this;
     }
   }
 }
