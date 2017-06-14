@@ -179,7 +179,7 @@ public class ConfirmationFragment extends Fragment {
     if(sensorValue<70 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
-        showRetryOption("Dim light. Please take again in brighter light.");
+        showRetryOption(getString(R.string.error_dim_light));
       } else {
         imageText.setVisibility(View.GONE);
         retryBtn.setVisibility(View.GONE);
@@ -209,8 +209,12 @@ public class ConfirmationFragment extends Fragment {
           imageContext.getContext(),
           ((BitmapDrawable) iv.getDrawable()).getBitmap(),
           getArguments().getFloat(ARG_FACE_OCCUPANCY));
-      if (occupancyResult != OccupancyResult.FACE_WITH_CONDITION) {
-        showRetryOption("Please take a closer picture.");
+      if (occupancyResult == OccupancyResult.NO_FACE) {
+        showRetryOption(getString(R.string.error_no_face));
+        return;
+      }
+      if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
+        showRetryOption(getString(R.string.error_face_condition));
       }
     }
   }

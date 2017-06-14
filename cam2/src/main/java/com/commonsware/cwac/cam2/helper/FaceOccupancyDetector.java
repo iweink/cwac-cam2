@@ -31,6 +31,7 @@ public class FaceOccupancyDetector {
     FaceDetector detector = new FaceDetector
         .Builder(context)
         .setTrackingEnabled(false)
+        .setProminentFaceOnly(true)
         .build();
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
     SparseArray<Face> faces = detector.detect(frame);
