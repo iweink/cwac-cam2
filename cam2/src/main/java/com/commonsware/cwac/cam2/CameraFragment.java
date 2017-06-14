@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,10 +42,14 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
+import com.commonsware.cwac.cam2.view.TextViewFont;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.util.LinkedList;
 
@@ -85,6 +90,7 @@ public class CameraFragment extends Fragment
   private ReverseChronometer reverseChronometer;
   private AmbientSensor ambientSensor;
   private boolean processingPreviousTouch = false;
+  private TextViewFont instructionTextView;
 
   public static CameraFragment newPictureInstance(Uri output,
                                                   boolean updateMediaStore,
@@ -261,6 +267,7 @@ public class CameraFragment extends Fragment
     View v=
       inflater.inflate(R.layout.cwac_cam2_fragment, container, false);
 
+    instructionTextView = (TextViewFont) v.findViewById(R.id.instruction);
     previewStack=
       (ViewGroup)v.findViewById(R.id.cwac_cam2_preview_stack);
 
@@ -768,4 +775,11 @@ public class CameraFragment extends Fragment
         // no-op
       }
     };
+
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    instructionTextView
+        .setCustomFont(instructionTextView.getContext(), getString(R.string.font_default));
+  }
 }

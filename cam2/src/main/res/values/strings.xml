@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="font_default">hind_regular.ttf</string>
   <string name="cwac_cam2_ok">Ok</string>
   <string name="cwac_cam2_retry">Take again</string>
     <string name="error_dim_light">Dim light, please take photo in better light.</string>

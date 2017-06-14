@@ -21,12 +21,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +39,8 @@ public class ConfirmationFragment extends Fragment {
   private Float quality;
   private int retakeCount = 0;
   private FaceOccupancyDetector faceOccupancyDetector = new FaceOccupancyDetector();
+  private boolean facePass = false;
+  private boolean sensorPass = false;
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -50,7 +49,7 @@ public class ConfirmationFragment extends Fragment {
 
   private TextView imageText;
   private TextView sensorText;
-  private Button retryBtn;
+  private TextView retryBtn;
   private ImageView iv;
   private ImageContext imageContext;
 
@@ -88,7 +87,7 @@ public class ConfirmationFragment extends Fragment {
     iv = (ImageView)view.findViewById(R.id.captured_image);
     sensorText = (TextView) view.findViewById(R.id.sensor_text);
     imageText = (TextView) view.findViewById(R.id.image_text);
-    retryBtn = (Button)view.findViewById(R.id.retry);
+    retryBtn = (TextView)view.findViewById(R.id.retry);
     retryBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -134,25 +133,6 @@ public class ConfirmationFragment extends Fragment {
   }
 
   @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.cwac_cam2_confirm, menu);
-    MenuItem ok = menu.findItem(R.id.cwac_cam2_ok);
-    ok.getActionView().setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        getContract().completeRequest(imageContext, true);
-      }
-    });
-    MenuItem retry = menu.findItem(R.id.cwac_cam2_retry);
-    retry.getActionView().setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        getContract().retakePicture();
-      }
-    });
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId()==android.R.id.home) {
       getContract().completeRequest(imageContext, false);
@@ -176,22 +156,25 @@ public class ConfirmationFragment extends Fragment {
     int sensorValue = getActivity().getIntent().getIntExtra(SENSOR_VALUE,0);
     System.out.println("SensorValue: "+sensorValue);
     sensorText.setText(""+sensorValue);
+    sensorPass = true;
     if(sensorValue<70 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
+        sensorPass = false;
         showRetryOption(getString(R.string.error_dim_light));
       } else {
         imageText.setVisibility(View.GONE);
         retryBtn.setVisibility(View.GONE);
       }
     }
+    if (sensorPass)  allCheckPassed();
     if (iv!=null) {
       loadImage(quality);
     }
   }
 
   private void showRetryOption(String message) {
-    getActivity().getActionBar().hide();
+//    getActivity().getActionBar().hide();
     retryBtn.setVisibility(View.VISIBLE);
     imageText.setVisibility(View.VISIBLE);
     imageText.setText(message);
@@ -209,13 +192,27 @@ public class ConfirmationFragment extends Fragment {
           imageContext.getContext(),
           ((BitmapDrawable) iv.getDrawable()).getBitmap(),
           getArguments().getFloat(ARG_FACE_OCCUPANCY));
+      facePass = false;
       if (occupancyResult == OccupancyResult.NO_FACE) {
         showRetryOption(getString(R.string.error_no_face));
         return;
       }
       if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
         showRetryOption(getString(R.string.error_face_condition));
+        return;
       }
+      if (occupancyResult == OccupancyResult.FACE_WITH_CONDITION) {
+        facePass = true;
+        allCheckPassed();
+      }
+    } else {
+      facePass = true;
+      allCheckPassed();
     }
+  }
+
+  public void allCheckPassed() {
+    if (!facePass || !sensorPass) return;
+    getContract().completeRequest(imageContext, true);
   }
 }
