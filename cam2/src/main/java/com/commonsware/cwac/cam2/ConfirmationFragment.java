@@ -17,6 +17,7 @@ package com.commonsware.cwac.cam2;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +29,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.cam2.helper.FaceOccupancyDetector;
+import com.commonsware.cwac.cam2.helper.ImageHelper;
 import com.commonsware.cwac.cam2.helper.OccupancyResult;
+
+import static com.commonsware.cwac.cam2.AbstractCameraActivity.EXTRA_MIRROR_PREVIEW;
 
 public class ConfirmationFragment extends Fragment {
   private static final String ARG_NORMALIZE_ORIENTATION=
@@ -39,6 +43,7 @@ public class ConfirmationFragment extends Fragment {
   private Float quality;
   private int retakeCount = 0;
   private FaceOccupancyDetector faceOccupancyDetector = new FaceOccupancyDetector();
+  private ImageHelper imageHelper = new ImageHelper();
   private boolean facePass = false;
   private boolean sensorPass = false;
 
@@ -53,12 +58,14 @@ public class ConfirmationFragment extends Fragment {
   private ImageView iv;
   private ImageContext imageContext;
 
-  public static ConfirmationFragment newInstance(boolean normalizeOrientation, float faceOccupancy) {
+  public static ConfirmationFragment newInstance(boolean normalizeOrientation, float faceOccupancy,
+                                                 boolean mirror) {
     ConfirmationFragment result=new ConfirmationFragment();
     Bundle args=new Bundle();
 
     args.putBoolean(ARG_NORMALIZE_ORIENTATION, normalizeOrientation);
     args.putFloat(ARG_FACE_OCCUPANCY, faceOccupancy);
+    args.putBoolean(EXTRA_MIRROR_PREVIEW, mirror);
     result.setArguments(args);
 
     return(result);
@@ -91,7 +98,6 @@ public class ConfirmationFragment extends Fragment {
     retryBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        getActivity().getActionBar().show();
         retryBtn.setVisibility(View.GONE);
         imageText.setVisibility(View.GONE);
         getContract().retakePicture();
@@ -184,8 +190,10 @@ public class ConfirmationFragment extends Fragment {
   }
 
   private void loadImage(Float quality) {
-    iv.setImageBitmap(imageContext.buildPreviewThumbnail(getActivity(),
-        quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
+    Bitmap bitmap = imageContext.buildPreviewThumbnail(getActivity(),
+        quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION));
+    if (getArguments().getBoolean(EXTRA_MIRROR_PREVIEW)) bitmap = imageHelper.flipImage(bitmap);
+    iv.setImageBitmap(bitmap);
     if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
       OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
           imageContext.getContext(),

@@ -112,8 +112,11 @@ public class CameraActivity extends AbstractCameraActivity
 
     if (confirmFrag==null) {
       confirmFrag=
-        ConfirmationFragment
-          .newInstance(normalizeOrientation(), getIntent().getFloatExtra(FACE_OCCUPANCY, 0));
+        ConfirmationFragment.newInstance(
+            normalizeOrientation(),
+            getIntent().getFloatExtra(FACE_OCCUPANCY, 0),
+            getIntent().getBooleanExtra(EXTRA_MIRROR_PREVIEW, false)
+            );
       getFragmentManager()
           .beginTransaction()
           .add(android.R.id.content, confirmFrag, TAG_CONFIRM)
