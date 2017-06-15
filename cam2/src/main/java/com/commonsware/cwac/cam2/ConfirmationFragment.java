@@ -157,7 +157,7 @@ public class ConfirmationFragment extends Fragment {
     System.out.println("SensorValue: "+sensorValue);
     sensorText.setText(""+sensorValue);
     sensorPass = true;
-    if(sensorValue<70 && sensorValue>0) {
+    if(sensorValue<30 && sensorValue>0) {
       if (retakeCount <2) {
         retakeCount++;
         sensorPass = false;
