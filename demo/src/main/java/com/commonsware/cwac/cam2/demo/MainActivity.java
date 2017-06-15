@@ -111,6 +111,7 @@ public class MainActivity extends Activity {
         .quality(AbstractCameraActivity.Quality.HIGH)
         .focusMode(FocusMode.CONTINUOUS)
         .zoomStyle(ZoomStyle.NONE)
+        .mirrorPreview()
         .updateMediaStore()
         .setFaceOccupancy(70)
         .requestPermissions()
