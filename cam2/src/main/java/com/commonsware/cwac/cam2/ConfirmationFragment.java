@@ -67,7 +67,7 @@ public class ConfirmationFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getActivity().getActionBar().hide();
     setRetainInstance(true);
     setHasOptionsMenu(true);
   }
@@ -174,7 +174,6 @@ public class ConfirmationFragment extends Fragment {
   }
 
   private void showRetryOption(String message) {
-//    getActivity().getActionBar().hide();
     retryBtn.setVisibility(View.VISIBLE);
     imageText.setVisibility(View.VISIBLE);
     imageText.setText(message);
