@@ -26,7 +26,8 @@
         android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
         android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
         android:paddingTop="5dp"
-        android:text="Retake"
+        android:text="@string/take_again"
+        android:textSize="20sp"
         android:textColor="@android:color/white"
         android:visibility="visible"
         app:customFont="@string/font_default"/>
