@@ -15,7 +15,8 @@ public class FaceOccupancyDetector {
   public OccupancyResult isFacePresentWithMinimumOccupancy(Context context, Bitmap bitmap,
                                                            float minimumOccupancyPercentage) {
     if (bitmap == null) return OccupancyResult.NO_FACE;
-    List<Face> faces = getFaces(context, bitmap);
+    List<Face> faces = getFaces(context, bitmap, true);
+    if (faces.size() == 0) return OccupancyResult.NO_FACE;
     if (faces.size() != 1) return OccupancyResult.MANY_FACES;
     double areaOfImage = bitmap.getWidth()*bitmap.getHeight();
     double areaOfFace = faces.get(0).getHeight() * faces.get(0).getWidth();
@@ -27,10 +28,11 @@ public class FaceOccupancyDetector {
         : OccupancyResult.FACE_WITHOUT_CONDITION;
   }
 
-  public List<Face> getFaces(Context context, Bitmap bitmap) {
+  public List<Face> getFaces(Context context, Bitmap bitmap, boolean singleFace) {
     FaceDetector detector = new FaceDetector
         .Builder(context)
         .setTrackingEnabled(false)
+        .setProminentFaceOnly(singleFace)
         .build();
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
     SparseArray<Face> faces = detector.detect(frame);

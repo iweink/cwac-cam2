@@ -200,6 +200,7 @@ public class MainActivity extends Activity {
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
+    if (wizardBody == null) return;
     outState.putInt(STATE_PAGE, wizardBody.getDisplayedChild());
     outState.putString(STATE_TEST_ROOT,
       testRoot.getAbsolutePath());
