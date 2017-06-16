@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <ImageView
+    <com.commonsware.cwac.cam2.view.RectangleImageView
         android:id="@+id/captured_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
