@@ -1,1 +1,1 @@
-include ':cam2'
+include ':cam2', ':demo'
