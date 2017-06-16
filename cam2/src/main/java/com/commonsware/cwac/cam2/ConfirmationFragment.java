@@ -18,19 +18,22 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.cam2.helper.FaceOccupancyDetector;
 import com.commonsware.cwac.cam2.helper.ImageHelper;
 import com.commonsware.cwac.cam2.helper.OccupancyResult;
+import com.commonsware.cwac.cam2.model.RectangleModel;
+import com.commonsware.cwac.cam2.view.RectangleImageView;
+import com.google.android.gms.vision.face.Face;
+
+import java.util.Arrays;
 
 import static com.commonsware.cwac.cam2.AbstractCameraActivity.EXTRA_MIRROR_PREVIEW;
 
@@ -55,7 +58,7 @@ public class ConfirmationFragment extends Fragment {
   private TextView imageText;
   private TextView sensorText;
   private TextView retryBtn;
-  private ImageView iv;
+  private RectangleImageView iv;
   private ImageContext imageContext;
 
   public static ConfirmationFragment newInstance(boolean normalizeOrientation, float faceOccupancy,
@@ -91,7 +94,7 @@ public class ConfirmationFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.confirmation_fragment,container,false);
-    iv = (ImageView)view.findViewById(R.id.captured_image);
+    iv = (RectangleImageView)view.findViewById(R.id.captured_image);
     sensorText = (TextView) view.findViewById(R.id.sensor_text);
     imageText = (TextView) view.findViewById(R.id.image_text);
     retryBtn = (TextView)view.findViewById(R.id.retry);
@@ -196,15 +199,18 @@ public class ConfirmationFragment extends Fragment {
     iv.setImageBitmap(bitmap);
     if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
       OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
-          imageContext.getContext(),
-          ((BitmapDrawable) iv.getDrawable()).getBitmap(),
-          getArguments().getFloat(ARG_FACE_OCCUPANCY));
+          imageContext.getContext(), bitmap, getArguments().getFloat(ARG_FACE_OCCUPANCY));
       facePass = false;
       if (occupancyResult == OccupancyResult.NO_FACE) {
         showRetryOption(getString(R.string.error_no_face));
         return;
       }
       if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
+        Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
+        iv.clean();
+        iv.addAll(Arrays.asList(new RectangleModel(
+            face.getPosition().x, face.getPosition().y,
+            face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
         showRetryOption(getString(R.string.error_face_condition));
         return;
       }
