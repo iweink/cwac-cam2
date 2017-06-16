@@ -6,36 +6,9 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <com.commonsware.cwac.cam2.view.RectangleImageView
-        android:id="@+id/captured_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/cwac_cam2_display_text_height"
-        android:scaleType="centerCrop"/>
-
-    <com.commonsware.cwac.cam2.view.TextViewFont
-        android:id="@+id/retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/oval_border"
-        android:drawableRight="@drawable/cwac_cam2_ic_refresh_white"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
-        android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
-        android:paddingTop="5dp"
-        android:text="@string/take_again"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:visibility="visible"
-        app:customFont="@string/font_default"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/cwac_cam2_display_text_height"
-        android:layout_alignParentBottom="true">
+        android:layout_height="@dimen/cwac_cam2_display_text_height">
 
         <com.commonsware.cwac.cam2.view.TextViewFont
             android:id="@+id/sensor_text"
@@ -58,4 +31,31 @@
             android:textSize="18sp"
             app:customFont="@string/font_default"/>
     </RelativeLayout>
+
+    <com.commonsware.cwac.cam2.view.RectangleImageView
+        android:id="@+id/captured_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/cwac_cam2_display_text_height"
+        android:scaleType="centerCrop"/>
+
+    <com.commonsware.cwac.cam2.view.TextViewFont
+        android:id="@+id/retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/oval_border"
+        android:drawableRight="@drawable/cwac_cam2_ic_refresh_white"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
+        android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
+        android:paddingTop="5dp"
+        android:text="@string/take_again"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:visibility="visible"
+        app:customFont="@string/font_default"/>
+
 </RelativeLayout>
