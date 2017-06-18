@@ -196,6 +196,7 @@ public class ConfirmationFragment extends Fragment {
     Bitmap bitmap = imageContext.buildPreviewThumbnail(getActivity(),
         quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION));
     if (getArguments().getBoolean(EXTRA_MIRROR_PREVIEW)) bitmap = imageHelper.flipImage(bitmap);
+    iv.clean();
     iv.setImageBitmap(bitmap);
     if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
       OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
@@ -207,7 +208,6 @@ public class ConfirmationFragment extends Fragment {
       }
       if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
         Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
-        iv.clean();
         iv.addAll(Arrays.asList(new RectangleModel(
             face.getPosition().x, face.getPosition().y,
             face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
