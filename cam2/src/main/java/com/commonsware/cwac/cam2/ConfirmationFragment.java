@@ -44,11 +44,11 @@ public class ConfirmationFragment extends Fragment {
     "face_occupancy";
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
-  private int retakeCount = 0;
   private FaceOccupancyDetector faceOccupancyDetector = new FaceOccupancyDetector();
   private ImageHelper imageHelper = new ImageHelper();
   private boolean facePass = false;
   private boolean sensorPass = false;
+  private boolean faceClosePass = false;
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -165,21 +165,18 @@ public class ConfirmationFragment extends Fragment {
     int sensorValue = getActivity().getIntent().getIntExtra(SENSOR_VALUE,0);
     System.out.println("SensorValue: "+sensorValue);
     sensorText.setText(""+sensorValue);
-    sensorPass = true;
-    if(sensorValue<30 && sensorValue>0) {
-      if (retakeCount <2) {
-        retakeCount++;
-        sensorPass = false;
-        showRetryOption(getString(R.string.error_dim_light));
-      } else {
-        imageText.setVisibility(View.GONE);
-        retryBtn.setVisibility(View.GONE);
-      }
-    }
-    if (sensorPass)  allCheckPassed();
     if (iv!=null) {
       loadImage(quality);
     }
+    // Show every error only once
+    if(!sensorPass && sensorValue<30 && sensorValue>0) {
+      sensorPass = true;
+      showRetryOption(getString(R.string.error_dim_light));
+      return;
+    }
+
+    if (sensorPass)  checkAllOccupancyConditionsAndCompleteRequest();
+
   }
 
   private void showRetryOption(String message) {
@@ -198,34 +195,43 @@ public class ConfirmationFragment extends Fragment {
     if (getArguments().getBoolean(EXTRA_MIRROR_PREVIEW)) bitmap = imageHelper.flipImage(bitmap);
     iv.clean();
     iv.setImageBitmap(bitmap);
-    if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
-      OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
-          imageContext.getContext(), bitmap, getArguments().getFloat(ARG_FACE_OCCUPANCY));
-      facePass = false;
-      if (occupancyResult == OccupancyResult.NO_FACE) {
-        showRetryOption(getString(R.string.error_no_face));
-        return;
-      }
-      if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
-        Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
-        iv.addAll(Arrays.asList(new RectangleModel(
-            face.getPosition().x, face.getPosition().y,
-            face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
-        showRetryOption(getString(R.string.error_face_condition));
-        return;
-      }
-      if (occupancyResult == OccupancyResult.FACE_WITH_CONDITION) {
-        facePass = true;
-        allCheckPassed();
-      }
-    } else {
-      facePass = true;
-      allCheckPassed();
+
+    // Complete request if face occupancy condition is not required
+    if (getArguments().getFloat(ARG_FACE_OCCUPANCY) <= 0) {
+      getContract().completeRequest(imageContext, true);
+      return;
     }
+
+    OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
+        imageContext.getContext(), bitmap, getArguments().getFloat(ARG_FACE_OCCUPANCY));
+
+    if (!facePass && occupancyResult == OccupancyResult.NO_FACE) {
+      showRetryOption(getString(R.string.error_no_face));
+      facePass = true;
+      return;
+    }
+
+    if (!faceClosePass && occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
+      Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
+      iv.addAll(Arrays.asList(new RectangleModel(
+          face.getPosition().x, face.getPosition().y,
+          face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
+      showRetryOption(getString(R.string.error_face_condition));
+      facePass = true;
+      faceClosePass = true;
+      return;
+    }
+
+    if (occupancyResult == OccupancyResult.FACE_WITH_CONDITION) {
+      faceClosePass = true;
+      facePass = true;
+    }
+
+    checkAllOccupancyConditionsAndCompleteRequest();
   }
 
-  public void allCheckPassed() {
-    if (!facePass || !sensorPass) return;
+  public void checkAllOccupancyConditionsAndCompleteRequest() {
+    if (!facePass || !sensorPass || !faceClosePass) return;
     getContract().completeRequest(imageContext, true);
   }
 }
