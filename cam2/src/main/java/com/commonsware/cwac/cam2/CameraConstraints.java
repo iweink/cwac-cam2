@@ -205,6 +205,14 @@ public class CameraConstraints {
       .highCamcorderProfile(CamcorderProfile.QUALITY_480P)
       .build());
     add(new Builder()
+      .manufacturer("Spectralink")
+      .product("cyclops_6dq")
+      .highCamcorderProfile(CamcorderProfile.QUALITY_1080P)
+      .previewRFCSizeWhitelist(new Size(1920,1080))
+      .pictureRFCSizeWhitelist(new Size(1920,1080))
+      .supportsCameraTwo(false)
+      .build());
+    add(new Builder()
       .manufacturer("Wileyfox")
       .product("Swift")
       .supportsCameraTwo(false)
@@ -263,6 +271,12 @@ public class CameraConstraints {
 
   public boolean isMatch() {
     boolean result=true;
+
+/*
+android.util.Log.e("20160618", Build.MANUFACTURER);
+android.util.Log.e("20160618", Build.PRODUCT);
+android.util.Log.e("20160618", Build.MODEL);
+*/
 
     if (manufacturer!=null) {
       result=manufacturer.matcher(Build.MANUFACTURER).matches();
