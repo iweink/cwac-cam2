@@ -49,6 +49,7 @@ public class ConfirmationFragment extends Fragment {
   private ImageHelper imageHelper = new ImageHelper();
   private boolean facePass = false;
   private boolean sensorPass = false;
+  private boolean faceClosePass = false;
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -167,10 +168,18 @@ public class ConfirmationFragment extends Fragment {
     sensorText.setText(""+sensorValue);
     sensorPass = true;
     if(sensorValue<30 && sensorValue>0) {
-      if (retakeCount <2) {
+      if (retakeCount <1) {
         retakeCount++;
         sensorPass = false;
         showRetryOption(getString(R.string.error_dim_light));
+        Bitmap bitmap = imageContext.buildPreviewThumbnail(getActivity(),
+            quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION));
+        if (getArguments().getBoolean(EXTRA_MIRROR_PREVIEW)) bitmap = imageHelper.flipImage(bitmap);
+        if (iv != null) {
+          iv.clean();
+          iv.setImageBitmap(bitmap);
+        }
+        return;
       } else {
         imageText.setVisibility(View.GONE);
         retryBtn.setVisibility(View.GONE);
@@ -201,22 +210,30 @@ public class ConfirmationFragment extends Fragment {
     if (getArguments().getFloat(ARG_FACE_OCCUPANCY) > 0) {
       OccupancyResult occupancyResult = faceOccupancyDetector.isFacePresentWithMinimumOccupancy(
           imageContext.getContext(), bitmap, getArguments().getFloat(ARG_FACE_OCCUPANCY));
-      facePass = false;
       if (occupancyResult == OccupancyResult.NO_FACE) {
-        showRetryOption(getString(R.string.error_no_face));
-        return;
+        if (!facePass) {
+          facePass = true;
+          showRetryOption(getString(R.string.error_no_face));
+          return;
+        }
       }
       if (occupancyResult == OccupancyResult.FACE_WITHOUT_CONDITION) {
-        Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
-        iv.addAll(Arrays.asList(new RectangleModel(
-            face.getPosition().x, face.getPosition().y,
-            face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
-        showRetryOption(getString(R.string.error_face_condition));
-        return;
-      }
-      if (occupancyResult == OccupancyResult.FACE_WITH_CONDITION) {
-        facePass = true;
-        allCheckPassed();
+        if (!faceClosePass){
+          Face face = faceOccupancyDetector.getFaces(imageContext.getContext(), bitmap, true).get(0);
+          iv.addAll(Arrays.asList(new RectangleModel(
+              face.getPosition().x, face.getPosition().y,
+              face.getPosition().x + face.getWidth(), Math.abs(face.getPosition().y) + face.getHeight())));
+          showRetryOption(getString(R.string.error_face_condition));
+          faceClosePass = true;
+          facePass = true;
+          return;
+        }
+      } else {
+        if (occupancyResult == OccupancyResult.FACE_WITH_CONDITION) {
+          facePass = true;
+          faceClosePass = true;
+          allCheckPassed();
+        }
       }
     } else {
       facePass = true;

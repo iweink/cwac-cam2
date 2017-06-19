@@ -6,9 +6,24 @@
     android:id="@+id/cameraview_top_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <com.commonsware.cwac.cam2.view.TextViewFont
+        android:id="@+id/instruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#000000"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="Turn your phone and touch anywhere to take photo"
+        android:textColor="#ffffff"
+        android:lineSpacingExtra="-7sp"
+        app:customFont="hind_semibold.ttf"
+        android:textSize="22sp"/>
 
     <FrameLayout
         android:id="@+id/cwac_cam2_preview_stack"
+        android:layout_below="@id/instruction"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -106,15 +121,4 @@
         android:padding="4dp"
         android:visibility="gone"/>
 
-    <com.commonsware.cwac.cam2.view.TextViewFont
-        android:id="@+id/instruction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#fafafa"
-        android:gravity="center_horizontal"
-        android:text="Turn your phone and touch anywhere to take photo"
-        android:textColor="#000000"
-        app:customFont="hind_regular.ttf"
-        android:textSize="20sp"/>
 </RelativeLayout>
