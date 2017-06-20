@@ -18,7 +18,8 @@
     android:name="android.hardware.microphone"
     android:required="false"/>
 
-  <application>
+  <application
+      android:largeHeap="true">
     <activity android:name="CameraActivity"/>
     <activity android:name="VideoRecorderActivity"/>
   </application>
