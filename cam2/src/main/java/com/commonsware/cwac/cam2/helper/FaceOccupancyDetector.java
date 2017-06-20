@@ -29,14 +29,16 @@ public class FaceOccupancyDetector {
   }
 
   public List<Face> getFaces(Context context, Bitmap bitmap, boolean singleFace) {
-    FaceDetector detector = new FaceDetector
+    SafeFaceDetector detector = new SafeFaceDetector(new FaceDetector
         .Builder(context)
+        .setLandmarkType(FaceDetector.NO_LANDMARKS)
         .setTrackingEnabled(false)
         .setProminentFaceOnly(singleFace)
-        .build();
+        .build());
+    List<Face> result = new ArrayList<>();
+    if (!detector.isOperational()) return result;
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
     SparseArray<Face> faces = detector.detect(frame);
-    List<Face> result = new ArrayList<>();
     for (int i=0; i<faces.size(); i++) {
       result.add(faces.valueAt(i));
     }
