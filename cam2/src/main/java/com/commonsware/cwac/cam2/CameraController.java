@@ -19,6 +19,7 @@
 
 package com.commonsware.cwac.cam2;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -26,16 +27,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.view.View;
+
+import com.commonsware.cwac.cam2.helper.SlackHelper;
 import com.commonsware.cwac.cam2.plugin.FlashModePlugin;
 import com.commonsware.cwac.cam2.plugin.FocusModePlugin;
 import com.commonsware.cwac.cam2.plugin.OrientationPlugin;
 import com.commonsware.cwac.cam2.plugin.SizeAndFormatPlugin;
 import com.commonsware.cwac.cam2.util.Size;
 import com.commonsware.cwac.cam2.util.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
@@ -46,6 +52,7 @@ import java.util.Queue;
  */
 public class CameraController implements CameraView.StateCallback {
   private final boolean allowChangeFlashMode;
+  private final SlackHelper slackHelper;
   private CameraEngine engine;
   private CameraSession session;
   private List<CameraDescriptor> cameras=null;
@@ -65,12 +72,13 @@ public class CameraController implements CameraView.StateCallback {
   public CameraController(FocusMode focusMode,
                           ResultReceiver onError,
                           boolean allowChangeFlashMode,
-                          boolean isVideo) {
+                          boolean isVideo, Context context) {
     this.onError=onError;
     this.focusMode=focusMode==null ?
       FocusMode.CONTINUOUS : focusMode;
     this.isVideo=isVideo;
     this.allowChangeFlashMode=allowChangeFlashMode;
+    slackHelper = new SlackHelper(context);
   }
 
   /**
@@ -113,8 +121,10 @@ public class CameraController implements CameraView.StateCallback {
       CameraDescriptor camera=cameras.get(currentCamera);
       CameraView cv=getPreview(camera);
 
-      if (cv.isAvailable()) {
+      if (cv != null && cv.isAvailable()) {
         open();
+      } else {
+        slackHelper.log(Arrays.asList("CameraControl: CameraView cv=getPreview(camera) null."));
       }
     }
   }
