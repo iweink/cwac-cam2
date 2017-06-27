@@ -15,19 +15,16 @@
 package com.commonsware.cwac.cam2.plugin;
 
 import android.annotation.TargetApi;
-import android.graphics.Point;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CaptureRequest;
 import android.media.CamcorderProfile;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
 import android.os.Build;
+
 import com.commonsware.cwac.cam2.CameraConfigurator;
 import com.commonsware.cwac.cam2.CameraConstraints;
 import com.commonsware.cwac.cam2.CameraPlugin;
 import com.commonsware.cwac.cam2.CameraSession;
-import com.commonsware.cwac.cam2.CameraTwoConfigurator;
 import com.commonsware.cwac.cam2.ClassicCameraConfigurator;
 import com.commonsware.cwac.cam2.SimpleCameraTwoConfigurator;
 import com.commonsware.cwac.cam2.SimpleClassicCameraConfigurator;
@@ -57,6 +54,11 @@ public class SizeAndFormatPlugin implements CameraPlugin {
     this.previewSize=previewSize;
     this.pictureSize=pictureSize;
     this.pictureFormat=pictureFormat;
+  }
+
+  @Override
+  public String getPluginName() {
+    return SizeAndFormatPlugin.class.getSimpleName();
   }
 
   /**

@@ -43,6 +43,7 @@ public interface CameraPlugin {
    */
   <T extends CameraConfigurator> T buildConfigurator(Class<T> type);
 
+  String getPluginName();
   /**
    * Validates whether or not the plugin is valid for this
    * CameraSession. Throw a runtime exception if it is not.

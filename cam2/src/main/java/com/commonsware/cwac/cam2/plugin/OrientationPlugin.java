@@ -80,6 +80,11 @@ public class OrientationPlugin implements CameraPlugin {
     return(type.cast(new Two()));
   }
 
+  @Override
+  public String getPluginName() {
+    return OrientationPlugin.class.getSimpleName();
+  }
+
   /**
    * {@inheritDoc}
    */
