@@ -36,9 +36,6 @@ import com.google.android.gms.vision.face.Face;
 import java.util.Arrays;
 
 import static com.commonsware.cwac.cam2.AbstractCameraActivity.EXTRA_MIRROR_PREVIEW;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class ConfirmationFragment extends Fragment {
   private static final String ARG_NORMALIZE_ORIENTATION=
