@@ -397,7 +397,7 @@ abstract public class AbstractCameraActivity extends Activity {
 
     CameraController ctrl=
       new CameraController(focusMode, onError,
-        allowChangeFlashMode, isVideo());
+        allowChangeFlashMode, isVideo(), this);
 
     cameraFrag.setController(ctrl);
     cameraFrag

@@ -38,11 +38,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Surface;
+
+import com.commonsware.cwac.cam2.helper.SlackHelper;
 import com.commonsware.cwac.cam2.util.Size;
 import org.greenrobot.eventbus.EventBus;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -57,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class CameraTwoEngine extends CameraEngine {
   private final Context ctxt;
+  private final SlackHelper slackHelper;
   private CameraManager mgr;
   final private HandlerThread handlerThread=new HandlerThread(getClass().getSimpleName(),
       android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -72,6 +76,7 @@ public class CameraTwoEngine extends CameraEngine {
    * @param ctxt any Context will do
    */
   public CameraTwoEngine(Context ctxt) {
+    slackHelper = new SlackHelper(ctxt);
     this.ctxt=ctxt.getApplicationContext();
     mgr=(CameraManager)this.ctxt.
         getSystemService(Context.CAMERA_SERVICE);
@@ -314,8 +319,16 @@ public class CameraTwoEngine extends CameraEngine {
                           PictureTransaction xact) {
     final Session s=(Session)session;
 
-    s.reader.setOnImageAvailableListener(new TakePictureTransaction(session.getContext(), getBus(), xact),
-        handler);
+    if(s.reader == null) s.reader = s.buildImageReader();
+    if (s.reader != null) {
+      s.reader.setOnImageAvailableListener(new TakePictureTransaction(session.getContext(), getBus(), xact),
+          handler);
+    } else {
+      List<String> messages = new ArrayList<>();
+      messages.add("s.buildImageReader() is null");
+      messages.addAll(s.getErrorLog());
+      slackHelper.log(messages);
+    }
 
     getThreadPool().execute(new Runnable() {
       @Override
@@ -830,6 +843,26 @@ public class CameraTwoEngine extends CameraEngine {
 
     private Session(Context ctxt, CameraDescriptor descriptor) {
       super(ctxt, descriptor);
+    }
+
+
+    public Collection<? extends String> getErrorLog() {
+      List<String> messages = new ArrayList<>();
+      ImageReader result=null;
+      for (CameraPlugin plugin : getPlugins()) {
+        String message = String.format("PluginName:%s\t", plugin.getPluginName());
+        CameraTwoConfigurator configurator=plugin.buildConfigurator(CameraTwoConfigurator.class);
+
+        message += String.format("Configuration:%s\t", configurator == null ? "null" :"not Null");
+        if (configurator!=null) {
+          result=configurator.buildImageReader();
+          message += String.format("Result:%s\t", result == null ? "null" :"not Null");
+        }
+
+        messages.add(message);
+        if (result!=null) break;
+      }
+      return messages;
     }
 
     ImageReader buildImageReader() {

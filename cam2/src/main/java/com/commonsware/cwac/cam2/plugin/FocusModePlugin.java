@@ -77,6 +77,11 @@ public class FocusModePlugin implements CameraPlugin {
     return(type.cast(new Two()));
   }
 
+  @Override
+  public String getPluginName() {
+    return FocusModePlugin.class.getSimpleName();
+  }
+
   /**
    * {@inheritDoc}
    */
