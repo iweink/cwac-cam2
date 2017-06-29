@@ -89,8 +89,15 @@ public class CameraFragment extends Fragment
   private Chronometer chronometer;
   private ReverseChronometer reverseChronometer;
   private AmbientSensor ambientSensor;
-  private boolean processingPreviousTouch = false;
   private TextViewFont instructionTextView;
+  private View v;
+  private View.OnClickListener takePictureListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      v.setOnClickListener(null);
+      performCameraAction();
+    }
+  };
 
   public static CameraFragment newPictureInstance(Uri output,
                                                   boolean updateMediaStore,
@@ -206,7 +213,7 @@ public class CameraFragment extends Fragment
         fabPicture.setEnabled(true);
         fabSwitch.setEnabled(canSwitchSources());
       }
-      processingPreviousTouch = false;
+      v.setOnClickListener(takePictureListener);
     }
   }
 
@@ -264,7 +271,7 @@ public class CameraFragment extends Fragment
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
                            Bundle savedInstanceState) {
-    View v=
+    v=
       inflater.inflate(R.layout.cwac_cam2_fragment, container, false);
 
     instructionTextView = (TextViewFont) v.findViewById(R.id.instruction);
@@ -289,23 +296,7 @@ public class CameraFragment extends Fragment
       }
     });
 
-
-    v.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View view) {
-
-       // if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-          if (processingPreviousTouch) {
-            return;
-          }
-          processingPreviousTouch = true;
-          performCameraAction();
-          return;
-        }
-     //   return false;
-     // }
-    });
+    v.setOnClickListener(takePictureListener);
 
     fabSwitch=(FloatingActionButton)v.findViewById(
       R.id.cwac_cam2_switch_camera);
