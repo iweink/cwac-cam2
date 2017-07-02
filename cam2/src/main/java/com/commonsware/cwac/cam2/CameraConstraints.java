@@ -33,7 +33,9 @@ public class CameraConstraints {
   private final boolean disableFocusMode;
   private final int cameraDisplayOrientation;
   private final boolean supportsFFC;
+  private final boolean supportsFFCVideo;
   private final boolean supportsRFC;
+  private final boolean supportsRFCVideo;
   private final ArrayList<Size> previewFFCSizeWhitelist;
   private final ArrayList<Size> previewRFCSizeWhitelist;
   private final ArrayList<Size> pictureFFCSizeWhitelist;
@@ -54,6 +56,7 @@ public class CameraConstraints {
       .manufacturer("asus")
       .product("razor")
       .supportsCameraTwo(false)
+      .supportsRFCVideo(false)
       .build());
     add(new Builder()
       .manufacturer("asus")
@@ -69,7 +72,8 @@ public class CameraConstraints {
       .manufacturer("HTC")
       .product("htc_mecha")
       .supportsFFC(false)
-      .highCamcorderProfile(CamcorderProfile.QUALITY_LOW)
+      .supportsFFCVideo(false)
+      .supportsRFCVideo(false)
       .build());
     add(new Builder()
       .manufacturer("htc")
@@ -90,7 +94,8 @@ public class CameraConstraints {
     add(new Builder()
       .manufacturer("LGE")
       .product("g3_tmo_us")
-      .highCamcorderProfile(CamcorderProfile.QUALITY_720P)
+      .supportsFFCVideo(false)
+      .supportsRFCVideo(false)
       .build());
     add(new Builder()
       .manufacturer("LGE")
@@ -174,13 +179,19 @@ public class CameraConstraints {
       .build());
     add(new Builder()
       .manufacturer("samsung")
+      .product("t03gxx")
+      .supportsFFCVideo(false)
+      .build());
+    add(new Builder()
+      .manufacturer("samsung")
       .product("zerofltexx")
       .supportsCameraTwo(false)
       .build());
     add(new Builder()
       .manufacturer("Sony")
       .product("C1505")
-      .highCamcorderProfile(CamcorderProfile.QUALITY_QCIF)
+      .supportsFFCVideo(false)
+      .supportsRFCVideo(false)
       .build());
     add(new Builder()
       .manufacturer("Sony")
@@ -249,7 +260,9 @@ public class CameraConstraints {
                             boolean disableFocusMode,
                             int cameraDisplayOrientation,
                             boolean supportsFFC,
+                            boolean supportsFFCVideo,
                             boolean supportsRFC,
+                            boolean supportsRFCVideo,
                             ArrayList<Size> previewFFCSizeWhitelist,
                             ArrayList<Size> previewRFCSizeWhitelist,
                             ArrayList<Size> pictureFFCSizeWhitelist,
@@ -262,7 +275,9 @@ public class CameraConstraints {
     this.disableFocusMode=disableFocusMode;
     this.cameraDisplayOrientation=cameraDisplayOrientation;
     this.supportsFFC=supportsFFC;
+    this.supportsFFCVideo=supportsFFCVideo;
     this.supportsRFC=supportsRFC;
+    this.supportsRFCVideo=supportsRFCVideo;
     this.previewFFCSizeWhitelist=previewFFCSizeWhitelist;
     this.previewRFCSizeWhitelist=previewRFCSizeWhitelist;
     this.pictureFFCSizeWhitelist=pictureFFCSizeWhitelist;
@@ -313,8 +328,16 @@ android.util.Log.e("20160618", Build.MODEL);
     return(supportsFFC);
   }
 
+  public boolean supportsFFCVideo() {
+    return(supportsFFCVideo);
+  }
+
   public boolean supportsRFC() {
     return(supportsRFC);
+  }
+
+  public boolean supportsRFCVideo() {
+    return(supportsRFCVideo);
   }
 
   public List<Size> getPreviewFFCSizeWhitelist() {
@@ -342,7 +365,9 @@ android.util.Log.e("20160618", Build.MODEL);
     private boolean disableFocusMode=false;
     private int cameraDisplayOrientation=-1;
     private boolean supportsFFC=true;
+    private boolean supportsFFCVideo=true;
     private boolean supportsRFC=true;
+    private boolean supportsRFCVideo=true;
     private ArrayList<Size> previewFFCSizeWhitelist;
     private ArrayList<Size> previewRFCSizeWhitelist;
     private ArrayList<Size> pictureFFCSizeWhitelist;
@@ -408,8 +433,20 @@ android.util.Log.e("20160618", Build.MODEL);
       return(this);
     }
 
+    public Builder supportsFFCVideo(boolean supportsFFCVideo) {
+      this.supportsFFCVideo=supportsFFCVideo;
+
+      return(this);
+    }
+
     public Builder supportsRFC(boolean supportsRFC) {
       this.supportsRFC=supportsRFC;
+
+      return(this);
+    }
+
+    public Builder supportsRFCVideo(boolean supportsRFCVideo) {
+      this.supportsRFCVideo=supportsRFCVideo;
 
       return(this);
     }
@@ -465,9 +502,10 @@ android.util.Log.e("20160618", Build.MODEL);
     public CameraConstraints build() {
       return(new CameraConstraints(manufacturer, product, model,
         supportsCameraTwo, highCamcorderProfile, disableFocusMode,
-        cameraDisplayOrientation, supportsFFC, supportsRFC,
-        previewFFCSizeWhitelist, previewRFCSizeWhitelist,
-        pictureFFCSizeWhitelist, pictureRFCSizeWhitelist));
+        cameraDisplayOrientation, supportsFFC, supportsFFCVideo,
+        supportsRFC, supportsRFCVideo, previewFFCSizeWhitelist,
+        previewRFCSizeWhitelist, pictureFFCSizeWhitelist,
+        pictureRFCSizeWhitelist));
     }
   }
 }

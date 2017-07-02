@@ -22,6 +22,7 @@ package com.commonsware.cwac.cam2;
 public class CameraSelectionCriteria {
   private Facing facing;
   private boolean facingExactMatch=false;
+  private boolean isVideo=false;
 
   /**
    * Getter method for the facing value, indicating if we
@@ -40,6 +41,13 @@ public class CameraSelectionCriteria {
    */
   public boolean getFacingExactMatch() {
     return(facingExactMatch);
+  }
+
+  /**
+   * @return true if this will be used for video
+   */
+  public boolean isVideo() {
+    return(isVideo);
   }
 
   /**
@@ -72,6 +80,18 @@ public class CameraSelectionCriteria {
      */
     public Builder facingExactMatch(boolean match) {
       criteria.facingExactMatch=match;
+
+      return(this);
+    }
+
+    /**
+     * Setting for indicating if we will be using this camera for video
+     *
+     * @param isVideo true if the camera will be used for video, false otherwise
+     * @return the builder, for chained calls
+     */
+    public Builder isVideo(boolean isVideo) {
+      criteria.isVideo=isVideo;
 
       return(this);
     }

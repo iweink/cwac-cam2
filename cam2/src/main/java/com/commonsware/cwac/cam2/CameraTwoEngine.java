@@ -183,8 +183,11 @@ public class CameraTwoEngine extends CameraEngine {
           new ArrayList<CameraDescriptor>();
 
         for (Descriptor camera : descriptors) {
-          if (!criteria.getFacingExactMatch() ||
-            camera.getScore(criteria)>0) {
+          if ((!criteria.getFacingExactMatch() ||
+            camera.getScore(criteria)>0) &&
+            !criteria.isVideo() ||
+            (camera.isFacingFront && CameraConstraints.get().supportsFFCVideo()) ||
+            (!camera.isFacingFront && CameraConstraints.get().supportsRFCVideo())) {
             result.add(camera);
           }
         }

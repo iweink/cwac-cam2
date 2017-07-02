@@ -153,8 +153,13 @@ public class ClassicCameraEngine extends CameraEngine
             new ArrayList<CameraDescriptor>();
 
           for (Descriptor descriptor : descriptors) {
-            if (!criteria.getFacingExactMatch() ||
-              descriptor.getScore(criteria)>0) {
+            if ((!criteria.getFacingExactMatch() ||
+              descriptor.getScore(criteria)>0) &&
+              !criteria.isVideo() ||
+              (descriptor.facing==Camera.CameraInfo.CAMERA_FACING_FRONT &&
+              CameraConstraints.get().supportsFFCVideo()) ||
+              (descriptor.facing!=Camera.CameraInfo.CAMERA_FACING_FRONT &&
+                CameraConstraints.get().supportsRFCVideo())) {
               result.add(descriptor);
             }
           }

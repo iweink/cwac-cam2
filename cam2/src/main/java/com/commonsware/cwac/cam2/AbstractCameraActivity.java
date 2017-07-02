@@ -417,6 +417,7 @@ abstract public class AbstractCameraActivity extends Activity {
       new CameraSelectionCriteria.Builder()
         .facing(facing)
         .facingExactMatch(match)
+        .isVideo(isVideo())
         .build();
     CameraEngine.ID forcedEngineId=
       (CameraEngine.ID)getIntent().getSerializableExtra(EXTRA_FORCE_ENGINE);
