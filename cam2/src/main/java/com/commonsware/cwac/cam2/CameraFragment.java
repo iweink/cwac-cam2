@@ -94,7 +94,8 @@ public class CameraFragment extends Fragment
   private View.OnClickListener takePictureListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-      v.setOnClickListener(null);
+      if (view != null) view.setOnClickListener(null);
+      else v.setOnClickListener(takePictureListener);
       performCameraAction();
     }
   };
@@ -523,6 +524,7 @@ public class CameraFragment extends Fragment
 
     fabPicture.setEnabled(false);
     fabSwitch.setEnabled(false);
+    ctlr.setAutoRetakeOnce(takePictureListener);
     ctlr.takePicture(b.build());
   }
 

@@ -38,10 +38,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 
 import com.commonsware.cwac.cam2.helper.SlackHelper;
 import com.commonsware.cwac.cam2.util.Size;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,6 +72,7 @@ public class CameraTwoEngine extends CameraEngine {
 //  private CountDownLatch closeLatch=null;
   private MediaActionSound shutter=new MediaActionSound();
   private List<Descriptor> descriptors=null;
+  private View.OnClickListener retakeOnceListener = null;
 
   /**
    * Standard constructor
@@ -313,6 +317,12 @@ public class CameraTwoEngine extends CameraEngine {
     finally {
       lock.release();
     }
+  }
+
+
+  @Override
+  public void setAutoRetakeOnce(View.OnClickListener retakeOnceListener) {
+    this.retakeOnceListener = retakeOnceListener;
   }
 
   /**
@@ -625,6 +635,9 @@ public class CameraTwoEngine extends CameraEngine {
             state == CaptureResult.CONTROL_AE_STATE_PRECAPTURE ||
             state == CaptureRequest.CONTROL_AE_STATE_FLASH_REQUIRED) {
           isWaitingForPrecapture=false;
+        } else if (retakeOnceListener != null) {
+          retakeOnceListener.onClick(null);
+          retakeOnceListener = null;
         }
       }
       else if (!haveWeStartedCapture) {
