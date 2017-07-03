@@ -15,7 +15,6 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class AmbientSensor implements SensorEventListener {
 
-    private static boolean testMode = false;
     private SensorManager mSensorManager;
     private Sensor mLight;
     private int sensorValue = 0;
@@ -42,18 +41,8 @@ public class AmbientSensor implements SensorEventListener {
         }
     }
 
-    // HACK to get tests working. Use dagger to mock this class in test setup.ß
-    public static void setTestSensorValue(int sensorValue) {
-        AmbientSensor.testMode = true;
-        AmbientSensor.sensorValue = sensorValue;
-    }
-
     public int getSensorValue(){
         return sensorValue;
-    }
-
-    public int getAccuracyLevel(){
-        return accuracyLevel;
     }
 
     public void unregisterSensorListener(){
