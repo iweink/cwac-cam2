@@ -18,6 +18,8 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
+
 import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.ArrayList;
@@ -295,6 +297,13 @@ abstract public class CameraEngine {
    */
   abstract public void takePicture(CameraSession session,
                                    PictureTransaction xact);
+
+  /**
+   * in some device single tab is not sufficient for taking picture, it requires at least two
+   * tabs to take a picture. we are using this listener to automatically retry
+   * @param takePictureListener
+   */
+  public void setAutoRetakeOnce(View.OnClickListener takePictureListener) {}
 
   abstract public void recordVideo(CameraSession session,
       VideoTransaction xact) throws Exception;

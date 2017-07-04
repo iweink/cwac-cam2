@@ -230,6 +230,10 @@ public class CameraController implements CameraView.StateCallback {
     }
   }
 
+  public void setAutoRetakeOnce(View.OnClickListener takePictureListener) {
+    if (engine != null) engine.setAutoRetakeOnce(takePictureListener);
+  }
+
   public void recordVideo(VideoTransaction xact) throws Exception {
     if (session!=null) {
       engine.recordVideo(session, xact);
