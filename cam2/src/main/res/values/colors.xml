@@ -7,4 +7,6 @@
   <color name="cwac_cam2_picture_fab">#4F8BD3</color>
   <color name="cwac_cam2_picture_fab_pressed">#5CA1F3</color>
   <color name="cwac_cam2_chrono_background">#80808080</color>
+  <color name="gray">#888682</color>
+
 </resources>
