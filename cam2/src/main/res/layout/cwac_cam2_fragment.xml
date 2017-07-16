@@ -2,28 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/cameraview_top_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.commonsware.cwac.cam2.view.TextViewFont
-        android:id="@+id/instruction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="#000000"
-        android:gravity="center_horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="Turn your phone and touch anywhere to take photo"
-        android:textColor="#ffffff"
-        android:lineSpacingExtra="-7sp"
-        app:customFont="hind_semibold.ttf"
-        android:textSize="22sp"/>
+
 
     <FrameLayout
         android:id="@+id/cwac_cam2_preview_stack"
-        android:layout_below="@id/instruction"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -42,14 +27,13 @@
                       android:background="@drawable/backselfie"
                       android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:lineSpacingExtra="2dp"
                 android:padding="10dp"
-                android:text="Turn your phone and click anywhere"
+                android:text="Turn your phone and \nclick anywhere"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="18dp"/>
