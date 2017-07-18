@@ -89,7 +89,6 @@ public class CameraFragment extends Fragment
   private Chronometer chronometer;
   private ReverseChronometer reverseChronometer;
   private AmbientSensor ambientSensor;
-  private TextViewFont instructionTextView;
   private View v;
   private View.OnClickListener takePictureListener = new View.OnClickListener() {
     @Override
@@ -275,7 +274,6 @@ public class CameraFragment extends Fragment
     v=
       inflater.inflate(R.layout.cwac_cam2_fragment, container, false);
 
-    instructionTextView = (TextViewFont) v.findViewById(R.id.instruction);
     previewStack=
       (ViewGroup)v.findViewById(R.id.cwac_cam2_preview_stack);
 
@@ -772,7 +770,5 @@ public class CameraFragment extends Fragment
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    instructionTextView
-        .setCustomFont(instructionTextView.getContext(), getString(R.string.font_default));
   }
 }
