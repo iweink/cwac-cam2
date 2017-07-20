@@ -38,10 +38,9 @@ import java.util.Arrays;
 import static com.commonsware.cwac.cam2.AbstractCameraActivity.EXTRA_MIRROR_PREVIEW;
 
 public class ConfirmationFragment extends Fragment {
-  private static final String ARG_NORMALIZE_ORIENTATION=
-    "normalizeOrientation";
-  private static final String ARG_FACE_OCCUPANCY=
-    "face_occupancy";
+  private static final String ARG_NORMALIZE_ORIENTATION = "normalizeOrientation";
+  private static final String ARG_FACE_OCCUPANCY = "face_occupancy";
+  private static final String ARG_REQUIRE_CONFIRMATION = "require_confirmation";
   private static final String SENSOR_VALUE ="sensorValue";
   private Float quality;
   private int retakeCount = 0;
@@ -50,6 +49,15 @@ public class ConfirmationFragment extends Fragment {
   private boolean facePass = false;
   private boolean sensorPass = false;
   private boolean faceClosePass = false;
+  private View confirmationBlock;
+  private View.OnClickListener retryListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      retryBtn.setVisibility(View.GONE);
+      imageText.setVisibility(View.GONE);
+      getContract().retakePicture();
+    }
+  };
 
   public interface Contract {
     void completeRequest(ImageContext imageContext, boolean isOK);
@@ -63,13 +71,14 @@ public class ConfirmationFragment extends Fragment {
   private ImageContext imageContext;
 
   public static ConfirmationFragment newInstance(boolean normalizeOrientation, float faceOccupancy,
-                                                 boolean mirror) {
+                                                 boolean mirror, boolean requireConfirmation) {
     ConfirmationFragment result=new ConfirmationFragment();
     Bundle args=new Bundle();
 
     args.putBoolean(ARG_NORMALIZE_ORIENTATION, normalizeOrientation);
     args.putFloat(ARG_FACE_OCCUPANCY, faceOccupancy);
     args.putBoolean(EXTRA_MIRROR_PREVIEW, mirror);
+    args.putBoolean(ARG_REQUIRE_CONFIRMATION, requireConfirmation);
     result.setArguments(args);
 
     return(result);
@@ -99,14 +108,16 @@ public class ConfirmationFragment extends Fragment {
     sensorText = (TextView) view.findViewById(R.id.sensor_text);
     imageText = (TextView) view.findViewById(R.id.image_text);
     retryBtn = (TextView)view.findViewById(R.id.retry);
-    retryBtn.setOnClickListener(new View.OnClickListener() {
+    confirmationBlock = view.findViewById(R.id.confirmation_block);
+
+    view.findViewById(R.id.cwac_cam2_ok).setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View view) {
-        retryBtn.setVisibility(View.GONE);
-        imageText.setVisibility(View.GONE);
-        getContract().retakePicture();
+      public void onClick(View v) {
+        getContract().completeRequest(imageContext, true);
       }
     });
+    view.findViewById(R.id.cwac_cam2_retry).setOnClickListener(retryListener);
+    retryBtn.setOnClickListener(retryListener);
     if (imageContext!=null) {
       loadImage(quality);
     }
@@ -242,7 +253,11 @@ public class ConfirmationFragment extends Fragment {
   }
 
   public void allCheckPassed() {
-    if (!facePass || !sensorPass) return;
-    getContract().completeRequest(imageContext, true);
+    if (!facePass || !sensorPass) {
+      return;
+    }
+    if (getArguments().getBoolean(ARG_REQUIRE_CONFIRMATION, false)) {
+      confirmationBlock.setVisibility(View.VISIBLE);
+    } else getContract().completeRequest(imageContext, true);
   }
 }
