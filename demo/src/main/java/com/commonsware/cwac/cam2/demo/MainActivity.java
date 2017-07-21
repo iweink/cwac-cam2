@@ -111,10 +111,11 @@ public class MainActivity extends Activity {
         .quality(AbstractCameraActivity.Quality.HIGH)
         .focusMode(FocusMode.CONTINUOUS)
         .zoomStyle(ZoomStyle.NONE)
-        .mirrorPreview()
+//        .mirrorPreview()
         .updateMediaStore()
         .setFaceOccupancy(70)
         .requestPermissions()
+        .setRequireConfirmation(true)
         .build();
     startActivityForResult(i, CAMERA_ACTIVITY_IDENTIFIER);
 //

@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="2dp"
                 android:padding="10dp"
-                android:text="Turn your phone and \ntouch anywhere to take photo"
+                android:text="Back camera only allowed for correct analysis. \n Turn your phone and touch anywhere to take photo."
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="18dp"/>

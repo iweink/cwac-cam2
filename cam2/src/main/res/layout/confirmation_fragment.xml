@@ -14,11 +14,11 @@
             android:id="@+id/sensor_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="#000000"
-            android:textColor="#ffffff"
+            android:layout_alignParentRight="true"
+            android:background="#ababab"
             android:text="25"
+            android:textColor="#ffffff"
             android:textSize="9sp"
             app:customFont="@string/font_default"/>
 
@@ -26,15 +26,51 @@
             android:id="@+id/image_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#ababab"
             android:gravity="center"
             android:lineSpacingExtra="-7dp"
-            android:text=""
-            android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text=""
             android:textColor="#ffffff"
-            android:background="#000000"
             android:textSize="22sp"
             app:customFont="@string/font_default"/>
+
+        <LinearLayout
+            android:id="@+id/confirmation_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/cwac_cam2_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/oval_border"
+                android:paddingBottom="5dp"
+                android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
+                android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
+                android:paddingTop="5dp"
+                android:text="@string/cwac_cam2_retry"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/cwac_cam2_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/oval_border"
+                android:paddingBottom="5dp"
+                android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
+                android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
+                android:paddingTop="5dp"
+                android:text="@string/cwac_cam2_ok"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <com.commonsware.cwac.cam2.view.RectangleImageView
@@ -58,8 +94,8 @@
         android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
         android:paddingTop="5dp"
         android:text="@string/take_again"
-        android:textSize="24sp"
         android:textColor="@android:color/white"
+        android:textSize="24sp"
         android:visibility="visible"
         app:customFont="@string/font_default"/>
 

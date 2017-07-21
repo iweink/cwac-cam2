@@ -72,8 +72,8 @@ public class CameraActivity extends AbstractCameraActivity
   public static final String EXTRA_SKIP_ORIENTATION_NORMALIZATION=
     "cwac_cam2_skip_orientation_normalization";
 
-  public static final String FACE_OCCUPANCY=
-      "face_occupancy";
+  public static final String FACE_OCCUPANCY = "face_occupancy";
+  public static final String REQUIRE_CONFIRMATION = "require_confirmation";
   /**
    * Extra name for duration of countdown timer, in seconds. If negative, 0,
    * or missing, no countdown timer will be used. If positive, a countdown
@@ -115,7 +115,8 @@ public class CameraActivity extends AbstractCameraActivity
         ConfirmationFragment.newInstance(
             normalizeOrientation(),
             getIntent().getFloatExtra(FACE_OCCUPANCY, 0),
-            getIntent().getBooleanExtra(EXTRA_MIRROR_PREVIEW, false)
+            getIntent().getBooleanExtra(EXTRA_MIRROR_PREVIEW, false),
+            getIntent().getBooleanExtra(REQUIRE_CONFIRMATION, false)
             );
       getFragmentManager()
           .beginTransaction()
@@ -356,6 +357,11 @@ public class CameraActivity extends AbstractCameraActivity
     public IntentBuilder setFaceOccupancy(float faceOccupancy) {
       result.putExtra(FACE_OCCUPANCY, faceOccupancy);
 
+      return this;
+    }
+
+    public IntentBuilder setRequireConfirmation(boolean status) {
+      result.putExtra(REQUIRE_CONFIRMATION, status);
       return this;
     }
   }
