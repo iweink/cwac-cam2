@@ -7,4 +7,5 @@
   <string name="error_no_face">No face could be found, please take face photo in bright light.</string>
   <string name="error_face_condition">Face too far for analysis, please take a closer picture.</string>
   <string name="take_again">Take Again</string>
+  <string name="cwac_cam2_continue">Continue</string>
 </resources>

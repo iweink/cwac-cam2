@@ -68,7 +68,7 @@
                 android:paddingLeft="@dimen/cwac_cam2_fragment_chrono_margin"
                 android:paddingRight="@dimen/cwac_cam2_fragment_chrono_margin"
                 android:paddingTop="5dp"
-                android:text="@string/cwac_cam2_ok"
+                android:text="@string/cwac_cam2_continue"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
     </RelativeLayout>
